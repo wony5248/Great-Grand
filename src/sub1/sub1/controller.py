@@ -47,6 +47,7 @@ class Controller(Node):
         self.is_turtlebot_status=False
         self.is_app_status=False
         self.is_envir_status=False
+        self.msg_count=0
 
 
     def listener_callback(self, msg):
@@ -59,7 +60,7 @@ class Controller(Node):
 
     def app_callback(self, msg):
         self.is_app_status=True
-        self.app_status_msg=msg  
+        self.app_status_msg=msg
 
     def app_all_on(self):
         print("on")
@@ -72,15 +73,25 @@ class Controller(Node):
             self.app_control_msg.data[i]=2
         self.app_control_pub.publish(self.app_control_msg)
         
-    def app_on_select(self,num):
+    def app_select_on(self,num):
         '''
         로직 2. 특정 가전 제품 ON
         '''
+        if 0 <= num < 17 :
+            self.app_control_msg.data[num]=1
+        else :
+            print("Error::controller.py::app_on_select::invalid Number")
+        self.app_control_pub.publish(self.app_control_msg)
 
-    def app_off_select(self,num):
+    def app_select_off(self,num):
         '''
         로직 3. 특정 가전 제품 OFF
         '''
+        if 0 <= num < 17 :
+            self.app_control_msg.data[num]=2
+        else :
+            print("Error::controller.py::app_dff_select::invalid Number")
+        self.app_control_pub.publish(self.app_control_msg)
 
     def turtlebot_go(self) :
         self.cmd_msg.linear.x=0.3
@@ -90,16 +101,22 @@ class Controller(Node):
         '''
         로직 4. 터틀봇 정지
         '''
+        self.cmd_msg.linear.x=0.0
+        self.cmd_msg.angular.z=0.0
 
     def turtlebot_cw_rot(self) :
         '''
         로직 5. 터틀봇 시계방향 회전
         '''
+        self.cmd_msg.linear.x=0.0
+        self.cmd_msg.angular.z=0.3
 
     def turtlebot_cww_rot(self) :
         '''
         로직 6. 터틀봇 반시계방향 회전
         '''
+        self.cmd_msg.linear.x=0.0
+        self.cmd_msg.angular.z=-0.3
 
 
     def timer_callback(self):
@@ -110,7 +127,35 @@ class Controller(Node):
         환경 정보 : 날짜, 시간, 온도, 날씨 출력
         가전 제품 : 가전상태 출력        
         '''
+        # 약 1초에 한번 상태 데이터 출력
+        self.msg_count += 1
+        
+        if self.msg_count > 30 :
+            self.msg_count = 0
+            # 터틀봇 상태 데이터가 있으면 상태 데이터 출력
+            if self.is_turtlebot_status :
+                print('Linear Velocity : {0}, Angular Velocity : {1}, battery percentage : {2}, power supply : {3}'.format(
+                        self.turtlebot_status_msg.twist.linear.x,
+                        self.turtlebot_status_msg.twist.angular.z,
+                        self.turtlebot_status_msg.battery_percentage,
+                        self.turtlebot_status_msg.power_supply_status
+                ))
 
+            # 환경 정보 데이터가 있으면 환경정보 데이터 출력
+            if self.is_envir_status :
+                print('{0}.{1}-{2}:{3}, temperature : {4}\'C, {5}'.format(
+                    self.envir_status_msg.month,
+                    self.envir_status_msg.day,
+                    self.envir_status_msg.hour,
+                    self.envir_status_msg.minute,
+                    self.envir_status_msg.temperature,
+                    self.envir_status_msg.weather
+                ))
+
+            # 가전 정보 출력
+            if self.is_app_status :
+                print(self.app_status_msg.data)
+        
         ## IOT(가전) 제어 함수
         # self.app_all_on()
         # self.app_all_off()
@@ -119,10 +164,10 @@ class Controller(Node):
 
 
         ## 터틀봇 제어 함수
-        self.turtlebot_go()
+        # self.turtlebot_go()
         # self.turtlebot_stop()
-        # self.turtlebot_cw_rot()
-        # self.turtlebot_ccw_rot()
+        self.turtlebot_cw_rot()
+        # self.turtlebot_cww_rot()
 
         self.cmd_publisher.publish(self.cmd_msg)
 
