@@ -39,36 +39,35 @@ class IMGParser(Node):
 
         # 로직 2. 카메라 콜백함수에서 이미지를 클래스 내 변수로 저장
         ## msg.data 는 bytes로 되어 있고 이를 uint8로 바꾼 다음
-        ## cv2 내의 이미지 디코딩 함수로 bgr 이미지로 바꾸세요.        
+        ## cv2 내의 이미지 디코딩 함수로 bgr 이미지로 바꾸세요.  
 
         np_arr = np.frombuffer(msg.data, np.uint8)
         img_bgr = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
         '''
         로직 3. 이미지 색 채널을 gray scale로 컨버팅
         cv2. 내의 이미지 색 채널 컨터버로 bgr 색상을 gary scale로 바꾸십시오.
-
-        img_gray = 
-
         '''
+
+        img_gray = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2GRAY)
+        
 
         '''
         로직 4. 이미지 resizing
         cv2를 사용해서 이미지를 원하는 크기로 바꿔보십시오.
-
-        img_resize = 
         '''
+        img_resize = cv2.resize(img_bgr,(640, 480), interpolation=cv2.INTER_CUBIC)
+        
 
         # 로직 5. 이미지 출력 (cv2.imshow)       
         
-        cv2.imshow("img_bgr", img_bgr)
-        # cv2.imshow("img_gray", img_gray)
-        # cv2.imshow("resize and gray", img_resize)       
+        #cv2.imshow("img_bgr", img_bgr)
+        #cv2.imshow("img_gray", img_gray)
+        cv2.imshow("resize and gray", img_resize)       
         
         cv2.waitKey(1)
 
 
 def main(args=None):
-
     ## 노드 초기화 : rclpy.init 은 node의 이름을 알려주는 것으로, ROS master와 통신을 가능하게 해줍니다.
     rclpy.init(args=args)
 
