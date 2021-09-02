@@ -42,36 +42,65 @@ class Handcontrol(Node):
             # 로직 2. 사용자 메뉴 구성
             print('Select Menu [0: status_check, 1: preview, 2:pick_up, 3:put_down')
             menu=input(">>")
-            if menu=='0' :               
-                self.hand_control_status()
-            if menu=='1' :
-                self.hand_control_preview()               
-            if menu=='2' :
-                self.hand_control_pick_up()   
-            if menu=='3' :
-                self.hand_control_put_down()
+            if self.is_turtlebot_status :
+                if menu=='0' :               
+                    self.hand_control_status()
+                if menu=='1' :
+                    self.hand_control_preview()               
+                if menu=='2' :
+                    self.hand_control_pick_up()   
+                if menu=='3' :
+                    self.hand_control_put_down()
+            else :
+                print("handcontrol::timer_callback::터틀봇 신호 존재하지않음")
 
 
     def hand_control_status(self):
         '''
         로직 3. Hand Control Status 출력
         '''
+        print("can lift : {0}, can put : {1}, can use hand : {2}".format(
+            self.turtlebot_status_msg.can_lift,
+            self.turtlebot_status_msg.can_put,
+            self.turtlebot_status_msg.can_use_hand
+        ))
+
 
     def hand_control_preview(self):
         '''
         로직 4. Hand Control - Preview
         '''
+        for _ in range(5000) :
+            if self.turtlebot_status_msg.can_use_hand :
+                self.hand_control_msg.control_mode = 1
+                self.hand_control_msg.put_distance = 1.0
+                self.hand_control_msg.put_height = 0.2
+
+                self.hand_control.publish(self.hand_control_msg)
+
 
     def hand_control_pick_up(self):
         '''
         로직 5. Hand Control - Pick up        
         '''
+        for _ in range(5000) :
+            if self.turtlebot_status_msg.can_lift :
+                self.hand_control_msg.control_mode = 2
+
+                self.hand_control.publish(self.hand_control_msg)
         
         
     def hand_control_put_down(self):        
         '''
         로직 6. Hand Control - Put down
         '''
+        for _ in range(5000) :
+            if self.turtlebot_status_msg.can_put :
+                self.hand_control_msg.control_mode = 3
+                self.hand_control_msg.put_distance = 1.0
+                self.hand_control_msg.put_height = 0.0
+
+                self.hand_control.publish(self.hand_control_msg)
 
 
     def turtlebot_status_cb(self,msg):
