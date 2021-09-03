@@ -67,29 +67,31 @@ class followTheCarrot(Node):
                 print(robot_pose_x,robot_pose_y,lateral_error)
                 '''
                 로직 4. 로봇이 주어진 경로점과 떨어진 거리(lateral_error)와 로봇의 선속도를 이용해 전방주시거리 설정
-                
-                self.lfd= 
+                '''
+                self.lfd= (self.status_msg.twist.linear.x + lateral_error) * 0.5
                 
                 if self.lfd < self.min_lfd :
                     self.lfd=self.min_lfd
                 if self.lfd > self.max_lfd:
                     self.lfd=self.max_lfd
 
-                '''
+                
 
                 min_dis=float('inf')
                 '''
                 로직 5. 전방 주시 포인트 설정
+                '''
                 for num,waypoint in enumerate(self.path_msg.poses) :
 
-                    self.current_point=
-                    dis=
+                    self.current_point = waypoint.pose.position
+                    dis = sqrt(pow(self.path_msg.poses[0].pose.position.x - self.current_point.x, 2)\
+                     + pow(self.path_msg.poses[0].pose.position.y - self.current_point.y, 2))
                     if abs(dis-self.lfd) < min_dis :
-                        min_dis=
-                        self.forward_point=
-                        self.is_look_forward_point=
+                        min_dis = abs(dis-self.lfd)
+                        self.forward_point = self.current_point
+                        self.is_look_forward_point = True
 
-                '''               
+                               
                 
                 if self.is_look_forward_point :
             
@@ -97,7 +99,7 @@ class followTheCarrot(Node):
 
                     '''
                     로직 6. 전방 주시 포인트와 로봇 헤딩과의 각도 계산
-
+                    
                     (테스트) 맵에서 로봇의 위치(robot_pose_x,robot_pose_y)가 (5,5)이고, 헤딩(self.robot_yaw) 1.57 rad 일 때, 선택한 전방포인트(global_forward_point)가 (3,7)일 때
                     변환행렬을 구해서 전방포인트를 로봇 기준좌표계로 변환을 하면 local_forward_point가 구해지고, atan2를 이용해 선택한 점과의 각도를 구하면
                     theta는 0.7853 rad 이 나옵니다.
@@ -105,20 +107,23 @@ class followTheCarrot(Node):
                     det_tran_matrix는 trans_matrix의 역행렬로, 기준좌표계(Map)에서 로봇좌표계로 좌표변환을 하기위한 변환 행렬입니다.  
                     local_forward_point 는 global_forward_point를 로봇좌표계로 옮겨온 결과를 저장하는 변수입니다.
                     theta는 로봇과 전방 주시 포인트와의 각도입니다. 
-
-                    trans_matrix=
-                    det_trans_matrix=
-                    local_forward_point=
-                    theta=
-                    
                     '''
+                    trans_matrix= np.array([
+                                            [cos(self.robot_yaw), -sin(self.robot_yaw), robot_pose_x],
+                                            [sin(self.robot_yaw),  cos(self.robot_yaw), robot_pose_y],
+                                            [                  0,                    0,            1]])
+                    det_trans_matrix = np.linalg.inv(trans_matrix)
+                    local_forward_point = det_trans_matrix.dot(global_forward_point)
+                    theta = -atan2(local_forward_point[1], local_forward_point[0])
+                    
+                    
                     
                     '''
                     로직 7. 선속도, 각속도 정하기
-                    out_vel=
-                    out_rad_vel=
+                    '''
+                    out_vel = 1.0
+                    out_rad_vel = theta * 2
 
-                    '''             
 
                     self.cmd_msg.linear.x=out_vel
                     self.cmd_msg.angular.z=out_rad_vel                    
@@ -138,10 +143,11 @@ class followTheCarrot(Node):
         self.odom_msg=msg
         '''
         로직 3. Quaternion 을 euler angle 로 변환
-        q=
-        _,_,self.robot_yaw=
+        '''
+        q = Quaternion(msg.pose.pose.orientation.w, msg.pose.pose.orientation.x, msg.pose.pose.orientation.y, msg.pose.pose.orientation.z)
+        _,_,self.robot_yaw = q.to_euler()
 
-        ''' 
+        
 
     
     def path_callback(self, msg):
