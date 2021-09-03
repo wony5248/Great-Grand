@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body> 
+
+    <!-- index.html은 사용자가 볼 페이지 구성입니다.  -->
+
+    <form>
+        <!-- 로직 1. textarea 생성 -->
+        <p>Security Status</p>
+        <textarea id = "tSafetyStatus" cols = 30 rows = 2></textarea>
+
+        <br></br>
+
+        <!-- 로직 2. 침입자 인지 시점 이미지 뷰어 생성 -->
+
+        <img src="cam.jpg?t=" width='480' onload='setTimeout(function() {src = src.substring(0, (src.lastIndexOf("t=")+2))+(new Date()).getTime()}, 50)'
+        onerror='setTimeout(function() {src = src.substring(0, (src.lastIndexOf("t=")+2))+(new Date()).getTime()}, 50)'/>
+
+        <br></br>
+        
+        <!-- 로직 3. 순찰 모드 스위치 버튼 생성 -->
+        <p>Patrol On/Off Status</p>
+        <textarea id = "tPatrolStatus" cols = 30 rows = 2></textarea>
+        <br></br>
+        <button type ='button' id="A1-btn", onclick="btn_patrol_on()">On</button>
+        <button type ='button' id="A2-btn", onclick="btn_patrol_off()">Off</button>
+        
+        <br></br>
+        
+        <!-- 로직 4. 수동 컨트롤 버튼 생성 -->
+        <p>Manual Controller</p>
+        <button type ='button' id="A1-btn", onclick="btn_turn_left()">Turn Left</button>
+        <button type ='button' id="A2-btn", onclick="btn_go_straight()">Go Straight</button>
+        <button type ='button' id="A2-btn", onclick="btn_turn_right()">Turn Right</button>
+
+    </form>
+
+    <script src="/socket.io/socket.io.js"></script>
+
+    <script type="text/javascript" src="/js/index.js"></script>
+    
+</body>
+</html>
