@@ -1,0 +1,12 @@
+명령어 모음
+call C:\dev\ros2_eloquent\setup.bat
+call C:\Users\dlwlgns\Desktop\catkin_ws\install\local_setup.bat
+
+ros2 run demo_nodes_cpp talker
+ros2 run demo_nodes_py listener
+
+ros2 pkg create --build-type ament_python --node-name my_node my_package
+
+ros2 launch ssafybridge_launch.py
+
+colcon build --packages-select 패키지이름
