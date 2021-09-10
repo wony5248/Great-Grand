@@ -92,8 +92,7 @@ class odom(Node):
             '''
             self.x=msg.twist.angular.x
             self.y=msg.twist.angular.y
-            self.theta+=angular_z*self.period
-                          
+            self.theta=radians(msg.twist.linear.z)
             self.base_link_transform.header.stamp =rclpy.clock.Clock().now().to_msg()
             self.laser_transform.header.stamp =rclpy.clock.Clock().now().to_msg()
             

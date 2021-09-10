@@ -55,43 +55,43 @@ class a_star(Node):
         self.dy = [0,1,-1,0,-1,1,-1,1]
         self.dCost = [1,1,1,1,1.414,1.414,1.414,1.414]
 
+        self.onetime = 0
+
 
     def grid_update(self):
         self.is_grid_update=True
+        print(self.map_msg)
         '''
         로직 3. 맵 데이터 행렬로 바꾸기
-        map_to_grid=
-        self.grid=
         '''
+        map_to_grid=self.map_msg.data
+        self.grid=map_to_grid.reshape(350,350)
 
 
     def pose_to_grid_cell(self,x,y):
-        map_point_x = 0
-        map_point_y = 0
         '''
         로직 4. 위치(x,y)를 map의 grid cell로 변환 
         (테스트) pose가 (-8,-4)라면 맵의 중앙에 위치하게 된다. 따라서 map_point_x,y 는 map size의 절반인 (175,175)가 된다.
-        pose가 (-16.75,12.75) 라면 맵의 시작점에 위치하게 된다. 따라서 map_point_x,y는 (0,0)이 된다.
-        map_point_x= ?
-        map_point_y= ?
+        pose가 (-16.75,-12.75) 라면 맵의 시작점에 위치하게 된다. 따라서 map_point_x,y는 (0,0)이 된다.
         '''
+        map_point_x = int(x-self.map_offset_x)/self.map_resolution
+        map_point_y = int(y-self.map_offset_y)/self.map_resolution
         
         return map_point_x,map_point_y
 
 
     def grid_cell_to_pose(self,grid_cell):
 
-        x = 0
-        y = 0
+        
         '''
         로직 5. map의 grid cell을 위치(x,y)로 변환
         (테스트) grid cell이 (175,175)라면 맵의 중앙에 위치하게 된다. 따라서 pose로 변환하게 되면 맵의 중앙인 (-8,-4)가 된다.
-        grid cell이 (350,350)라면 맵의 제일 끝 좌측 상단에 위치하게 된다. 따라서 pose로 변환하게 되면 맵의 좌측 상단인 (0.75,6.25)가 된다.
-
-        x=?
-        y=?
-
+        grid cell이 (350,350)라면 맵의 제일 끝 좌측 상단에 위치하게 된다. 따라서 pose로 변환하게 되면 맵의 좌측 상단인 (0.75,4.75)가 된다.
         '''
+        map_point_x, map_point_y = grid_cell
+        x = self.map_resolution*map_point_x+self.map_offset_x
+        y = self.map_resolution*map_point_y+self.map_offset_y
+
         return [x,y]
 
 
@@ -103,6 +103,10 @@ class a_star(Node):
     def map_callback(self,msg):
         self.is_map=True
         self.map_msg=msg
+        if self.onetime == 0:
+            print(self.map_msg.data)
+            print(type(self.map_msg.data))
+            self.onetime = 1
         
 
     def goal_callback(self,msg):
@@ -114,6 +118,8 @@ class a_star(Node):
             goal_y=
             goal_cell=
             self.goal = 
+
+            
             '''             
             print(msg)
             
