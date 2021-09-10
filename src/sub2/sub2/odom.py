@@ -6,7 +6,7 @@ from ssafy_msgs.msg import TurtlebotStatus
 from sensor_msgs.msg import Imu
 from squaternion import Quaternion
 from nav_msgs.msg import Odometry
-from math import pi,cos,sin
+from math import pi,cos,sin, radians
 import tf2_ros
 import geometry_msgs.msg
 import time
@@ -68,7 +68,7 @@ class odom(Node):
 
     def listener_callback(self, msg):
         #print('linear_vel : {}  angular_vel : {}'.format(msg.twist.linear.x,-msg.twist.angular.z))        
-
+        print(msg)
         if self.is_status == False :
             self.is_status=True
             self.prev_time=rclpy.clock.Clock().now()
@@ -92,7 +92,7 @@ class odom(Node):
             '''
             self.x=msg.twist.angular.x
             self.y=msg.twist.angular.y
-            self.theta+=angular_z*self.period
+            self.theta=radians(msg.twist.linear.z)
                           
             self.base_link_transform.header.stamp =rclpy.clock.Clock().now().to_msg()
             self.laser_transform.header.stamp =rclpy.clock.Clock().now().to_msg()
