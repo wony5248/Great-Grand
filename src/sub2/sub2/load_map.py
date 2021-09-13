@@ -56,7 +56,7 @@ class loadMap(Node):
         '''
         로직 2. 맵 데이터 읽고, 2차원 행렬로 변환
         '''
-        full_path='./../map/map.txt'
+        full_path='C:/Users/dlwlgns/Desktop/catkin_ws/src/sub2/map/map.txt'
         self.f=open(full_path, 'r')
         
         line=self.f.readlines()
@@ -68,8 +68,8 @@ class loadMap(Node):
         map_to_grid=np.array(self.map_data)
         grid=map_to_grid.reshape(350,350)
 
-        print(grid)
-        print(len(grid))
+        #print(grid)
+        #print(len(grid))
 
 
         for y in range(350):
@@ -92,8 +92,8 @@ class loadMap(Node):
         np_map_data=grid.reshape(1,350*350) 
         list_map_data=np_map_data.tolist()
 
-        print(list_map_data)
-        print(len(list_map_data))
+        #print(list_map_data)
+        #print(len(list_map_data))
 
         ## 로직2를 완성하고 주석을 해제 시켜주세요.
         self.f.close()
