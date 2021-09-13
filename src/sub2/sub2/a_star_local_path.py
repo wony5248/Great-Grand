@@ -23,12 +23,12 @@ class astarLocalpath(Node):
         super().__init__('a_star_local_path')
         # 로직 1. publisher, subscriber 만들기
         self.local_path_pub = self.create_publisher(Path, 'local_path', 10)
-        self.subscription = self.create_subscription(Path,'/global_path',self.path_callback,10)
+        self.global_path_sub = self.create_subscription(Path,'/global_path',self.path_callback,10)
         self.subscription = self.create_subscription(Odometry,'/odom',self.listener_callback,10)
         self.odom_msg=Odometry()
         self.is_odom=False
         self.is_path=False
-
+       
         self.global_path_msg=Path()
 
 
@@ -45,14 +45,11 @@ class astarLocalpath(Node):
 
 
     def path_callback(self,msg):
-        pass
         '''
         로직 2. global_path 데이터 수신 후 저장
-
-        self.is_path=
-        self.global_path_msg=
-        
         '''
+        self.is_path=True
+        self.global_path_msg=msg
 
         
     def timer_callback(self):
@@ -67,31 +64,36 @@ class astarLocalpath(Node):
             
             '''
             로직 4. global_path 중 로봇과 가장 가까운 포인트 계산
-            
-            min_dis=
+            '''
+            min_dis=float('inf')
             for i,waypoint in enumerate(self.global_path_msg.poses) : 
-                distance=
+                distance=((x-waypoint.pose.position.x)**2 + (y-waypoint.pose.position.y)**2)**(1/2)
                 if distance < min_dis :
-                    min_dis=
-                    current_waypoint=
-
-            '''           
+                    min_dis=distance
+                    current_waypoint=i
+                       
             
             
             '''
             로직 5. local_path 예외 처리
-
+            '''
             if current_waypoint != -1 : 
                 if current_waypoint + self.local_path_size < len(self.global_path_msg.poses):
-                    
-                    
-                
+                    for num in range(current_waypoint, current_waypoint + self.local_path_size) :
+                        tmp_pose = PoseStamped()
+                        tmp_pose.pose.position.x=self.global_path_msg.poses[num].pose.position.x
+                        tmp_pose.pose.position.y=self.global_path_msg.poses[num].pose.position.y
+                        tmp_pose.pose.orientation.w=1.0
+                        local_path_msg.poses.append(tmp_pose)
                 else :
+                    for num in range(current_waypoint, len(self.global_path_msg.poses)) :
+                        tmp_pose = PoseStamped()
+                        tmp_pose.pose.position.x=self.global_path_msg.poses[num].pose.position.x
+                        tmp_pose.pose.position.y=self.global_path_msg.poses[num].pose.position.y
+                        tmp_pose.pose.orientation.w=1.0
+                        local_path_msg.poses.append(tmp_pose)
 
-                    
-                              
-            '''           
-
+                               
             self.local_path_pub.publish(local_path_msg)
         
 
