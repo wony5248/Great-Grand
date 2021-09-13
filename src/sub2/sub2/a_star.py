@@ -178,7 +178,7 @@ class a_star(Node):
         node = self.goal
         while found == True : 
             nextNode = self.path[node[0]][node[1]]
-            self.final_path.insert(0, node)
+            self.final_path.append(node)
             if node[0] == start[0] and node[1] == start[1] :
                 break
             node = nextNode
