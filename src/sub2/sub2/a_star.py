@@ -51,11 +51,10 @@ class a_star(Node):
         self.map_offset_y=-4-8.75
     
         self.GRIDSIZE=350 
- 
+
         self.dx = [-1,0,0,1,-1,-1,1,1]
         self.dy = [0,1,-1,0,-1,1,-1,1]
         self.dCost = [1,1,1,1,1.414,1.414,1.414,1.414]
-       
 
     def grid_update(self):
         self.is_grid_update=True
@@ -182,7 +181,6 @@ class a_star(Node):
             if node[0] == start[0] and node[1] == start[1] :
                 break
             node = nextNode
-               
         
 
         

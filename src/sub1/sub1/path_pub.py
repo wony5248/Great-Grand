@@ -45,7 +45,8 @@ class pathPub(Node):
         '''
         로직 2. 만들어 놓은 경로 데이터를 읽기 모드로 open
         '''
-        full_path= 'C:\\Users\\multicampus\\Desktop\\PJTII\\src\\sub1\\path\\my_path.txt'
+        #full_path= 'C:\\Users\\multicampus\\Desktop\\PJTII\\src\\sub1\\path\\my_path.txt'
+        full_path= os.getcwd()+ '/../path/my_path.txt'
         self.f= open(full_path, 'r')
 
 
