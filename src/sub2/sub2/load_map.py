@@ -56,7 +56,8 @@ class loadMap(Node):
         '''
         로직 2. 맵 데이터 읽고, 2차원 행렬로 변환
         '''
-        full_path='C:/Users/dlwlgns/Desktop/catkin_ws/src/sub2/map/map.txt'
+        #full_path='C:/Users/dlwlgns/Desktop/catkin_ws/src/sub2/map/map.txt'
+        full_path= os.getcwd()+ '/../map/map.txt'
         self.f=open(full_path, 'r')
         
         line=self.f.readlines()
@@ -75,8 +76,8 @@ class loadMap(Node):
         for y in range(350):
             for x in range(350):
                 if grid[x][y]==100 :
-                    for ny in range(-2,3):
-                        for nx in range(-2,3):
+                    for ny in range(-4,5):
+                        for nx in range(-4,5):
                             if 0 <= x+nx < 350 and 0 <= y+ny < 350:
                                 if grid[x+nx][y+ny] != 100:
                                     grid[x+nx][y+ny] = 127

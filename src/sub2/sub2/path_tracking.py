@@ -33,7 +33,7 @@ class followTheCarrot(Node):
         self.path_sub = self.create_subscription(Path,'/local_path',self.path_callback,10)
 
         # 로직 1. 제어 주기 및 타이머 설정
-        time_period=0.05 
+        time_period=0.02 
         self.timer = self.create_timer(time_period, self.timer_callback)
 
         self.is_odom=False
