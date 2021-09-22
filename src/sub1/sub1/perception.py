@@ -67,6 +67,11 @@ class IMGParser(Node):
             '/image_jpeg/compressed',
             self.img_callback,
             10)
+        self.img_bgr = None
+
+        self.timer_period = 0.03
+
+        self.timer = self.create_timer(self.timer_period, self.timer_callback)
 
     def preproc(self, image):
         """preprocess function for CameraLoader.
@@ -84,10 +89,11 @@ class IMGParser(Node):
 
 
         np_arr = np.frombuffer(msg.data, np.uint8)
-        frame = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
+        self.img_bgr = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
 
+    def detect_falldown(self, img_bgr):
         # Detection
-        image = frame.copy()
+        frame = self.preproc(img_bgr)
 
         # Detect humans bbox in the frame with detector model.
         #TODO: 여기서 에러남
@@ -187,6 +193,16 @@ class IMGParser(Node):
         return np.array((kpt[:, 0].min() - ex, kpt[:, 1].min() - ex,
                          kpt[:, 0].max() + ex, kpt[:, 1].max() + ex))
 
+    def timer_callback(self):
+
+        if self.img_bgr is not None:
+
+            self.detect_falldown(self.img_bgr)
+            # # 로직 8 : bbox msg 송신s
+            # self.bbox_pub_.publish(self.bbox_msg)
+
+        else:
+            pass
 
 def main(args=None):
     ## 노드 초기화 : rclpy.init 은 node의 이름을 알려주는 것으로, ROS master와 통신을 가능하게 해줍니다.
