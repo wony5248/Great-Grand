@@ -60,7 +60,7 @@ app.use("/recipe", require(`${__dirname}/routes/recipe/recipe`));
 
 
 app.get("/", function (req, res) {
-  res.send("Hello node.js");
+  res.send("Hello node.js2");
 });
 
 app.get("/img", function(req, res){
