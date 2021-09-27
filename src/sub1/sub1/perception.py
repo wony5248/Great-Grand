@@ -57,10 +57,7 @@ class IMGParser(Node):
         self.fps_time = 0
         self.f = 0
         self.resize_fn = ResizePadding(self.inp_dets, self.inp_dets)
-        # 로직 1. image subscriber 생성
-        ## 아래와 같이 subscriber가 
-        ## 미리 정의된 토픽 이름인 '/image_jpeg/compressed' 에서
-        ## CompressedImage 메시지를 받도록 설정된다.
+
         print("Subscription")
         self.subscription = self.create_subscription(
             CompressedImage,
@@ -84,10 +81,7 @@ class IMGParser(Node):
 
         # 로직 2. 카메라 콜백함수에서 이미지를 클래스 내 변수로 저장
         ## msg.data 는 bytes로 되어 있고 이를 uint8로 바꾼 다음
-        ## cv2 내의 이미지 디코딩 함수로 bgr 이미지로 바꾸세요.  
-
-
-
+        ## cv2 내의 이미지 디코딩 함수로 bgr 이미지로 바꾸세요.
         np_arr = np.frombuffer(msg.data, np.uint8)
         self.img_bgr = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
 
@@ -95,8 +89,7 @@ class IMGParser(Node):
         # Detection
         frame = self.preproc(img_bgr)
 
-        # Detect humans bbox in the frame with detector model.
-        #TODO: 여기서 에러남
+        # # Detect humans bbox in the frame with detector model.
         detected = self.detect_model.detect(frame, need_resize=False, expand_bb=10)
 
         # Predict each tracks bbox of current frame from previous frames information with Kalman filter.
@@ -158,13 +151,6 @@ class IMGParser(Node):
                                     0.4, (255, 0, 0), 2)
                 frame = cv2.putText(frame, action, (bbox[0] + 5, bbox[1] + 15), cv2.FONT_HERSHEY_COMPLEX,
                                     0.4, clr, 1)
-        '''
-        로직 3. 이미지 색 채널을 gray scale로 컨버팅
-        cv2. 내의 이미지 색 채널 컨터버로 bgr 색상을 gary scale로 바꾸십시오.
-        '''
-
-        # img_gray = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2GRAY)
-        
 
         '''
         로직 4. 이미지 resizing
