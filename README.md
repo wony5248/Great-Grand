@@ -1,5 +1,12 @@
 # Object detection
 
+## install 추가파일 추가 위치
+
+```
+install/sub1/Lib/site-packages/sub1
+```
+안에 install추가파일 모두 복붙
+
 ## 낙상감지 실행법
 
 빌드, 시뮬레이션 실행, 런처 이후
