@@ -26,7 +26,7 @@ class IMGParser(Node):
 
     def __init__(self):
         super().__init__(node_name='image_convertor')
-
+        print(cv2.__version__)
         self.face_dirs = 'faces/'
 
         self.face_classifier = cv2.CascadeClassifier('./haarcascade_frontalface_default.xml')
