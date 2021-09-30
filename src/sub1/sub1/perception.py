@@ -89,38 +89,62 @@ class IMGParser(Node):
         # Detection
         frame = self.preproc(img_bgr)
 
-        # # Detect humans bbox in the frame with detector model.
+        # # Detect humans bbox in the frame with detector model.\
+        # 사람인식 모델 : detect_model --> 인식 후 bbox 출력
+        # detected의 리턴값: [top, left, bottom, right, bbox_score, class_score, class]
         detected = self.detect_model.detect(frame, need_resize=False, expand_bb=10)
 
         # Predict each tracks bbox of current frame from previous frames information with Kalman filter.
+        # 이전 프레임의 정보를 토대로 kalman filter를 사용하여 현재 프레임의 bbox를 예측
+        # kalman filter란 물체의 시작부터 현재까지 센서 입력값과 제어 입력값을 이용하여 현재 상태를 확률적으로 추정하는 것
+        # 특히 kalman filter는 일부 동적시스템에 대해서 정보가 확실하지 않은 곳에서 사용할 수 있고 노이즈를 제거하는데 좋은 역활을 한다.
+        # 이 이상 설명을 하려면 수식으로 깊게 들어가야하기때문에...이정도만...!더 자료 찾아보셔도 좋습니다...!
         self.tracker.predict()
         # Merge two source of predicted bbox together.
+        # tracker에서 예측한 bbox와 실제 현재 프레임의 bbox를 합침
         for track in self.tracker.tracks:
             det = torch.tensor([track.to_tlbr().tolist() + [0.5, 1.0, 0.0]], dtype=torch.float32)
+            # 만일 detected가 None이 아니면 detected의 배열과 det을 합치고 아니라면 det만 detected에 넣기
             detected = torch.cat([detected, det], dim=0) if detected is not None else det
 
         detections = []  # List of Detections object for tracking.
         if detected is not None:
             # detected = non_max_suppression(detected[None, :], 0.45, 0.2)[0]
             # Predict skeleton pose of each bboxs.
+            # 위의 담긴 bbox를 토대로 skeleton을 디텍션
+            '''
+            AlphaPose사용 - Real-Time 환경에서 Multi-Person Pose Estimation 및 Tracking 이 가능한 오픈 시스템
+            
+            return값
+            'bbox'
+            'bbox_score'
+            'keypoints'
+            'kp_score'
+            'proposal_score'
+            '''
             poses = self.pose_model.predict(frame, detected[:, 0:4], detected[:, 4])
 
             # Create Detections object.
+            # detection은 poses에서 받아온 값을 한번 정리 후에 bbox의 center와 범위등을 알기 위해 사용된다.
             detections = [Detection(self.kpt2bbox(ps['keypoints'].numpy()),
                                     np.concatenate((ps['keypoints'].numpy(),
                                                     ps['kp_score'].numpy()), axis=1),
                                     ps['kp_score'].mean().numpy()) for ps in poses]
 
             # VISUALIZE.
+            # cv에 bbox기준으로 사각형 치는 코드(현재는 밑에서 한꺼번에 해주기때문에 쓰이지 않는다.)
             if self.show_detected:
                 for bb in detected[:, 0:5]:
                     frame = cv2.rectangle(frame, (bb[0], bb[1]), (bb[2], bb[3]), (0, 0, 255), 1)
 
         # Update tracks by matching each track information of current and previous frame or
         # create a new track if no matched.
+        # detections에 저장된 값으로 tracker의 값들을 update한다 --> 이 후 이전 값을 토대로 현재를 예측하는 kalman filter에 적용하기 위해
         self.tracker.update(detections)
 
         # Predict Actions of each track.
+        # 여기부터 Actions(넘어졌는지 판단) 이건 아까 설명과 비슷합니다.
+        # 필요하시면 최대한 빨리 드릴게요...!
         for i, track in enumerate(self.tracker.tracks):
             if not track.is_confirmed():
                 continue
@@ -143,6 +167,7 @@ class IMGParser(Node):
                     clr = (255, 200, 0)
 
             # VISUALIZE.
+            # 이제까지 찾은 bbox와 스켈레톤을 시각화 및 텍스트 삽입
             if track.time_since_update == 0:
                 if self.show_skeleton:
                     frame = draw_single(frame, track.keypoints_list[-1])
