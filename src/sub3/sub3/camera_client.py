@@ -60,8 +60,8 @@ class HumanDetectorToServer(Node):
         self.byte_data = msg.data
         np_arr = np.frombuffer(msg.data, np.uint8)
         self.img_bgr = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
-        print("pleassssssssssssssssse")
         cv2.imshow("img_test", self.img_bgr) 
+        
         self.timer_callback()
  
 
@@ -81,7 +81,7 @@ class HumanDetectorToServer(Node):
             self.byte_data = cv2.imencode('.jpg', self.img_bgr)[1].tobytes()
 
             sio.emit('streaming', b64data.decode( 'utf-8' ) )
-        
+            cv2.waitKey(1)
 
 def main(args=None):
     print("main 1")
@@ -92,10 +92,12 @@ def main(args=None):
     rclpy.spin(human_detector)
     print("main 4")
     human_detector.destroy_node()
+    cv2.destroyAllWindows()
     print("main 5")
     rclpy.shutdown()
     print("main 6")
     sio.disconnect()
+
 
 
 if __name__ == '__main__':

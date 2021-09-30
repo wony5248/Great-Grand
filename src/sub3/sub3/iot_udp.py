@@ -133,11 +133,11 @@ class iot_udp(Node):
         HEADER = '#Ctrl-command$'
         DATA_LENGTH = 18
 
-        header = HEADER.encode('utf-8')
-        data_length = (DATA_LENGTH).to_bytes(4, 'little')
-        aux_data = b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
+        header = HEADER.encode()
+        data_length = struct.pack('i',18)
+        aux_data = struct.pack('iii',0,0,0)
         self.upper = header + data_length + aux_data
-        self.tail = b'\r\n'
+        self.tail = '\r\n'.encode()
 
         uid_pack = self.uid_to_packet(uid)
         cmd_pack = bytes([cmd[0], cmd[1]])
