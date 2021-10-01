@@ -28,7 +28,9 @@ setup(
             'odom = sub1.odom:main',
             'make_path = sub1.make_path:main',
             'path_pub = sub1.path_pub:main',
-            'path_tracking = sub1.path_tracking:main'
+            'path_tracking = sub1.path_tracking:main',
+            'make_user = sub1.user_enroll:main',
+            'user_recog = sub1.user_recognition:main'
         ],
     },
 )
