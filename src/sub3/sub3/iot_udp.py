@@ -77,6 +77,7 @@ class iot_udp(Node):
         while True:
             # 로직 5. 사용자 메뉴 생성
             print('Select Menu [0: scan, 1: connect, 2:control, 3:disconnect, 4:all_procedures ] ')
+            print("1")
             try:
                 menu = int(input())
             except Exception as e:
@@ -106,18 +107,17 @@ class iot_udp(Node):
         HEADER = '#Appliances-Status$'
         DATA_LENGTH = 20
 
-        header = raw_data[:19].decode('utf-8')
-        data_length = int.from_bytes(raw_data[19:23], 'little')
-        aux_data = raw_data[23:35]
-        uid = None
+        header = raw_data[0:19].decode()
+        data_length = struct.unpack("i", raw_data[19:23])
+        aux_data = struct.unpack("iii", raw_data[23:35])
 
 
-        if header == HEADER and data_length == DATA_LENGTH:
-            uid_pack = raw_data[35:55]
+        if header == HEADER and data_length[0] == DATA_LENGTH:
+            uid_pack = struct.unpack("16B", raw_data[35:51])
             uid = self.packet_to_uid(uid_pack)
 
-            network_status = (raw_data[51], raw_data[52])
-            device_status = (raw_data[53], raw_data[54])
+            network_status = struct.unpack("2B", raw_data[51:53])
+            device_status = struct.unpack("2B", raw_data[53:55])
 
             self.is_recv_data = True
             # if not uid in self.recv_data:
@@ -196,8 +196,8 @@ class iot_udp(Node):
             #         self.send_data(uid, params_control_cmd["TRY_TO_CONNECT"])
             if params_status[self.recv_data[1]] == "CONNECTION_LOST":
                 self.send_data(self.recv_data[0], params_control_cmd["RESET"])
-            else:
-                self.send_data(self.recv_data[0], params_control_cmd["TRY_TO_CONNECT"])
+                time.sleep(0.5)
+            self.send_data(self.recv_data[0], params_control_cmd["TRY_TO_CONNECT"])
 
 
     def control(self):

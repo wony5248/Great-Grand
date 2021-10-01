@@ -4,8 +4,11 @@
 // 1. 서버에서 온 메시지를 웹페이지에 전달
 // 2. 버튼 클릭시 호출되는 함수
 
-const socket = io();
+const socket = io("http://127.0.0.1:12001");
 
+socket.on('connection', function()  {
+    console.log('disconnected form server_client.');
+});
 socket.on('disconnect', function()  {
     console.log('disconnected form server_client.');
 });

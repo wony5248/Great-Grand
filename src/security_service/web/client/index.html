@@ -18,8 +18,8 @@
 
         <!-- 로직 2. 침입자 인지 시점 이미지 뷰어 생성 -->
 
-        <img src="cam.jpg?t=" width='480' onload='setTimeout(function() {src = src.substring(0, (src.lastIndexOf("t=")+2))+(new Date()).getTime()}, 50)'
-        onerror='setTimeout(function() {src = src.substring(0, (src.lastIndexOf("t=")+2))+(new Date()).getTime()}, 50)'/>
+        <img src="cam.jpg?t=" width='480' onload='setTimeout(function() {src = src.substring(0, (src.lastIndexOf("t=")+2))+(new Date()).getTime()}, 1)'
+        onerror='setTimeout(function() {src = src.substring(0, (src.lastIndexOf("t=")+2))+(new Date()).getTime()}, 1)'/>
 
         <br></br>
         
@@ -42,7 +42,7 @@
 
     <script src="/socket.io/socket.io.js"></script>
 
-    <script type="text/javascript" src="/js/index.js"></script>
+    <script type="text/javascript" src="/src/security_service/web/client/js/index.js"></script>
     
 </body>
 </html>
