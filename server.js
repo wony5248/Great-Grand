@@ -121,7 +121,7 @@ io.on('connection', function(socket) {
     socket.to(roomName).emit('sendStreaming', message);
     // console.log(message);
     buffer = Buffer.from(message, "base64");
-    fs.writeFileSync(path.join(picPath, "/../client/cam.jpg"), buffer);
+    fs.writeFileSync(path.join(picPath, "/../build/cam.jpg"), buffer);
   });
 })
 
