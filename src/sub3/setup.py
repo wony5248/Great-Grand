@@ -29,9 +29,8 @@ setup(
             'iot_udp = sub3.iot_udp:main',
             'iot_udp_skeleton = sub3.iot_udp_skeleton:main',
             'run_localization_skeleton = sub3.run_localization_skeleton:main',
-            'run_mapping_skeleton = sub3.run_mapping_skeleton:main'
-
-
+            'run_mapping_skeleton = sub3.run_mapping_skeleton:main',
+            'camera_client = sub3.camera_client:main'
         ],
     },
 )

@@ -133,9 +133,6 @@ class iot_udp(Node):
         HEADER = '#Ctrl-command$'
         DATA_LENGTH = 18
 
-        # header = HEADER.encode('utf-8')
-        # data_length = (DATA_LENGTH).to_bytes(4, 'little')
-        # aux_data = b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
         header = HEADER.encode()
         data_length = struct.pack('i',18)
         aux_data = struct.pack('iii',0,0,0)
