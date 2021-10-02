@@ -5,7 +5,9 @@
 install/
 log/
 build/
-
+src/security_service/web/node_modules/
+src/security_service/web/backend/node_modules/
+src/security_service/web/frontend/node_modules/
 # Ignore generated docs
 *.dox
 *.wikidoc

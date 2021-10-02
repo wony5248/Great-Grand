@@ -77,28 +77,28 @@ class iot_udp(Node):
         while True:
             # 로직 5. 사용자 메뉴 생성
             print('Select Menu [0: scan, 1: connect, 2:control, 3:disconnect, 4:all_procedures ] ')
-            print("1")
             try:
                 menu = int(input())
+                if menu == 0:
+                # scan
+                    self.scan()
+                elif menu == 1:
+                # connect
+                    self.connect()
+                elif menu == 2:
+                # control
+                    self.control()
+                elif menu == 3:
+                # disconnect
+                    self.disconnect()
+                elif menu == 4:
+                # all procedures
+                    self.all_procedures()
             except Exception as e:
                 print(e)
                 menu = 0
 
-            if menu == 0:
-                # scan
-                self.scan()
-            elif menu == 1:
-                # connect
-                self.connect()
-            elif menu == 2:
-                # control
-                self.control()
-            elif menu == 3:
-                # disconnect
-                self.disconnect()
-            elif menu == 4:
-                # all procedures
-                self.all_procedures()
+            
 
     def data_parsing(self, raw_data):
         # print(raw_data)
