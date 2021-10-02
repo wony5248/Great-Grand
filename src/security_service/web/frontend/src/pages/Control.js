@@ -11,8 +11,9 @@ import styled1 from "styled-components";
 import { Grid, Paper } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useMediaQuery } from "react-responsive";
-import Streamimg from "../assets/streaming.jpg";
+import Streamimg from "../assets/cam.jpg";
 import { display } from "@mui/system";
+// import socketio from "socke"
 const Streamingdiv = styled1.div`
     width: 100%;
     height: 300px ;

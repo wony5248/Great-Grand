@@ -7,10 +7,10 @@ const path = require('path');
 const express = require('express');
 
 // client 경로의 폴더를 지정해줍니다.
-const publicPath = path.join(__dirname, "/../client");
+const publicPath = path.join(__dirname, "/../frontend");
 var app = express();
 
-const picPath = path.join(__dirname, "/../client");
+const picPath = path.join(__dirname, "/../frontend");
 
 app.use(express.static(publicPath));
 
@@ -72,7 +72,7 @@ io.on('connection', socket => {
         socket.to(roomName).emit('sendStreaming', message);
         // console.log(message);
         buffer = Buffer.from(message, "base64");
-        fs.writeFileSync(path.join(picPath, "/../client/cam.jpg"), buffer);
+        fs.writeFileSync(path.join(picPath, "/../frontend/src/assets/cam.jpg"), buffer);
     });
 
 })
