@@ -17,6 +17,15 @@ from .FallDownDetection.PoseEstimateLoader import SPPE_FastPose
 from .FallDownDetection.Detection.Utils import ResizePadding
 from .FallDownDetection.fn import draw_single
 
+# 네이버 클라우드 SENS를 통한 메세지 전송을 위해 추가
+import sys
+import os
+import hashlib
+import hmac
+import base64
+import requests
+#import time
+
 # image parser 노드는 이미지를 받아서 opencv 의 imshow로 윈도우창에 띄우는 역할을 합니다.
 # 이를 resize나 convert를 사용하여 이미지를 원하는대로 바꿔보세요.
 
@@ -26,6 +35,7 @@ from .FallDownDetection.fn import draw_single
 # 3. 이미지 색 채널을 gray scale로 컨버팅
 # 4. 이미지 resizing
 # 5. 이미지 imshow
+
 
 
 class IMGParser(Node):
@@ -69,6 +79,74 @@ class IMGParser(Node):
         self.timer_period = 0.03
 
         self.timer = self.create_timer(self.timer_period, self.timer_callback)
+
+        # 네이버 SENS를 위한 변수
+        self.sms_url = "https://sens.apigw.ntruss.com"
+        self.sms_access_key = "이부분은 따로 카카오톡에 따로 올려놓았습니다."
+        self.sms_secret_key = "이부분은 따로 카카오톡에 따로 올려놓았습니다."
+        self.sms_uri = "이부분은 따로 카카오톡에 따로 올려놓았습니다."
+        self.sms_type = "SMS"
+        self.sms_from_countryCode = "82"
+        self.sms_from_number = "01091401340"
+        # 아래에서 받을 전화번호와 내용을 수정하면 됩니다.
+        self.sms_to_number = "01091401340"
+        self.sms_message = "낙상이 발생했습니다."
+
+        self.sms_flag = False
+
+
+    # 서명을 만드는 과정
+    def make_signature(self, access_key, secret_key, method, uri, timestmap):
+        timestamp = str(int(time.time() * 1000))
+        secret_key = bytes(secret_key, 'UTF-8')
+
+        message = method + " " + uri + "\n" + timestamp + "\n" + access_key
+        message = bytes(message, 'UTF-8')
+        signingKey = base64.b64encode(hmac.new(secret_key, message, digestmod=hashlib.sha256).digest())
+        return signingKey
+
+    # sms 매시지를 보내는 함수
+    def send_sms(self):
+        if self.sms_flag == False :
+            #  URL
+            url = self.sms_url + self.sms_uri
+            # access key
+            access_key = self.sms_access_key 
+            # secret key
+            secret_key = self.sms_secret_key
+            # uri
+            uri = self.sms_uri
+            timestamp = str(int(time.time() * 1000))
+
+            body = {
+                "type":self.sms_type,
+                "contentType":"COMM",
+                "countryCode":self.sms_from_countryCode,
+                "from":self.sms_from_number,
+                "content": self.sms_message,
+                "messages":[
+                    {
+                        "to": self.sms_to_number,
+                        "content": self.sms_message
+                    }
+                ]
+                }
+
+            key = self.make_signature(access_key, secret_key, 'POST', uri, timestamp)
+            headers = {
+                'Content-Type': 'application/json; charset=utf-8',
+                'x-ncp-apigw-timestamp': timestamp,
+                'x-ncp-iam-access-key': access_key,
+                'x-ncp-apigw-signature-v2': key
+            }   
+
+
+            res = requests.post(url, json=body, headers=headers)
+            self.sms_flag = True
+
+            print(res.json())
+            return res.json()
+
 
     def preproc(self, image):
         """preprocess function for CameraLoader.
@@ -163,8 +241,10 @@ class IMGParser(Node):
                 action = '{}: {:.2f}%'.format(action_name, out[0].max() * 100)
                 if action_name == 'Fall Down':
                     clr = (255, 0, 0)
+                    self.send_sms()
                 elif action_name == 'Lying Down':
                     clr = (255, 200, 0)
+                    self.send_sms()
 
             # VISUALIZE.
             # 이제까지 찾은 bbox와 스켈레톤을 시각화 및 텍스트 삽입
