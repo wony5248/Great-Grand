@@ -47,8 +47,8 @@ class a_star(Node):
         self.map_size_x=350
         self.map_size_y=350
         self.map_resolution=0.05
-        self.map_offset_x=-8-8.75
-        self.map_offset_y=-4-8.75
+        self.map_offset_x=-6.5-8.75
+        self.map_offset_y=9.5-8.75
     
         self.GRIDSIZE=350 
 
@@ -74,8 +74,8 @@ class a_star(Node):
         (테스트) pose가 (-8,-4)라면 맵의 중앙에 위치하게 된다. 따라서 map_point_x,y 는 map size의 절반인 (175,175)가 된다.
         pose가 (-16.75,12.75) 라면 맵의 시작점에 위치하게 된다. 따라서 map_point_x,y는 (0,0)이 된다.
         '''
-        map_point_x= int(x/0.05) + 335
-        map_point_y= int(y/0.05) + 255
+        map_point_x= int(x*20) + 305
+        map_point_y= int(y*20) - 15
         
         return map_point_x,map_point_y
 
@@ -90,8 +90,8 @@ class a_star(Node):
         grid cell이 (350,350)라면 맵의 제일 끝 좌측 상단에 위치하게 된다. 따라서 pose로 변환하게 되면 맵의 좌측 상단인 (0.75,6.25)가 된다.
         '''
         map_point_x, map_point_y = grid_cell
-        x= 0.05 * (map_point_x - 335)
-        y= 0.05 * (map_point_y - 255)
+        x= 0.05 * (map_point_x - 305)
+        y= 0.05 * (map_point_y + 15)
         
 
         return [x,y]
