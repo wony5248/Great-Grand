@@ -11,8 +11,11 @@ import styled1 from "styled-components";
 import { Grid, Paper } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useMediaQuery } from "react-responsive";
-import Streamimg from "../assets/cam.jpg";
+import { useEffect, useState } from "react";
+// import Streamimg from "../assets/cam.jpg";
 import { display } from "@mui/system";
+import { io } from "socket.io-client";
+const address = "http://127.0.0.1:12001";
 // import socketio from "socke"
 const Streamingdiv = styled1.div`
     width: 100%;
@@ -42,6 +45,7 @@ const Onbtn = styled1.button`
     width: 160px;
     height: 80px;
     border:none;
+    cursor: pointer;
     color: white;
 `;
 const Offbtn = styled1.button`
@@ -49,6 +53,7 @@ const Offbtn = styled1.button`
     width: 160px;
     height: 80px;
     border: none;
+    cursor: pointer;
     color: white;
 `;
 const Controlbtn = styled1.button`
@@ -56,6 +61,7 @@ const Controlbtn = styled1.button`
     width: 90px;
     height: 90px;
     border:none;
+    cursor: pointer;
     color: white;
 `;
 const Registbtn = styled1.button`
@@ -63,6 +69,7 @@ const Registbtn = styled1.button`
     width: 160px;
     height: 80px;
     border:none;
+    cursor: pointer;
     color: white;
 `;
 const Desktop = ({ children }) => {
@@ -77,8 +84,40 @@ const Mobile = ({ children }) => {
   const isMobile = useMediaQuery({ maxWidth: 612 });
   return isMobile ? children : null;
 };
+const Click = (con) => {
+  const socket = io(address, {
+    withCredentials: true,
+    transports: ["websocket", "polling"],
+    extraHeaders: {
+      "my-custom-header": "abcd",
+    },
+  });
+  socket.emit("IoT", con);
+  console.log(con)
+};
 
 function Control() {
+  const [image, setImage] = useState("");
+  useEffect(() => {
+    const socket = io(address, {
+      withCredentials: true,
+      transports: ["websocket", "polling"],
+      extraHeaders: {
+        "my-custom-header": "abcd",
+      },
+    });
+    socket.on("connect", () => {
+      console.log(socket.id);
+    });
+    socket.on("jpgstream", (msg) => {
+      setImage(msg);
+    });
+    socket.on("disconnect", () => {
+      console.log("disconnected");
+    });
+    console.log(socket.connected);
+    socket.on("sensormsg", (message) => {});
+  }, []);
   return (
     <React.Fragment>
       <AppAppBar />
@@ -93,9 +132,13 @@ function Control() {
         >
           <Desktop>
             <Streamingdiv style={{ height: "450px", maxWidth: "900px" }}>
-              <img src={Streamimg} height="100%" width="100%"></img>
+              <img
+                src={`data:image/jpg;base64,${image}`}
+                height="100%"
+                width="100%"
+              ></img>
             </Streamingdiv>
-            <Rescontroldiv style={{ maxWidth: "900px", display:"flex"}}>
+            <Rescontroldiv style={{ maxWidth: "900px", display: "flex" }}>
               <Iotcontroldiv>
                 {" "}
                 <Typography
@@ -109,16 +152,18 @@ function Control() {
                 >
                   IOT ON/OFF
                 </Typography>
-                <Iotonoffldiv style={{
+                <Iotonoffldiv
+                  style={{
                     display: "flex",
-                    width:"60%",
-                    height:"300px",
-                    flexDirection:"column",
+                    width: "60%",
+                    height: "300px",
+                    flexDirection: "column",
                     justifyContent: "space-evenly",
                     alignItems: "center",
-                  }}>
-                  <Onbtn>ON</Onbtn>
-                  <Offbtn>OFF</Offbtn>
+                  }}
+                >
+                  <Onbtn onClick={() => Click(1)}>ON</Onbtn>
+                  <Offbtn onClick={() => Click(2)}>OFF</Offbtn>
                 </Iotonoffldiv>
               </Iotcontroldiv>
               <Tuttlediv>
@@ -152,7 +197,7 @@ function Control() {
             <div
               style={{
                 width: "100%",
-                maxWidth:"900px",
+                maxWidth: "900px",
                 marginTop: "30px",
                 display: "flex",
                 justifyContent: "flex-end",
@@ -163,9 +208,13 @@ function Control() {
           </Desktop>
           <Tablet>
             <Streamingdiv style={{ maxWidth: "700px" }}>
-              <img src={Streamimg} height="100%" width="100%"></img>
+              <img
+                src={`data:image/jpg;base64,${image}`}
+                height="100%"
+                width="100%"
+              ></img>
             </Streamingdiv>
-            <Rescontroldiv style={{ maxWidth: "700px", display:"flex"}}>
+            <Rescontroldiv style={{ maxWidth: "700px", display: "flex" }}>
               <Iotcontroldiv>
                 {" "}
                 <Typography
@@ -179,16 +228,18 @@ function Control() {
                 >
                   IOT ON/OFF
                 </Typography>
-                <Iotonoffldiv style={{
+                <Iotonoffldiv
+                  style={{
                     display: "flex",
-                    width:"60%",
-                    height:"300px",
-                    flexDirection:"column",
+                    width: "60%",
+                    height: "300px",
+                    flexDirection: "column",
                     justifyContent: "space-evenly",
                     alignItems: "center",
-                  }}>
-                  <Onbtn>ON</Onbtn>
-                  <Offbtn>OFF</Offbtn>
+                  }}
+                >
+                  <Onbtn onClick={Click(1)}>ON</Onbtn>
+                  <Offbtn onClick={Click(2)}>OFF</Offbtn>
                 </Iotonoffldiv>
               </Iotcontroldiv>
               <Tuttlediv>
@@ -222,7 +273,7 @@ function Control() {
             <div
               style={{
                 width: "100%",
-                maxWidth:"700px",
+                maxWidth: "700px",
                 marginTop: "30px",
                 display: "flex",
                 justifyContent: "flex-end",
@@ -233,7 +284,11 @@ function Control() {
           </Tablet>
           <Mobile>
             <Streamingdiv style={{ height: "300px" }}>
-              <img src={Streamimg} height="100%" width="100%"></img>
+              <img
+                src={`data:image/jpg;base64,${image}`}
+                height="100%"
+                width="100%"
+              ></img>
             </Streamingdiv>
             <Rescontroldiv>
               <Iotcontroldiv>
@@ -256,8 +311,8 @@ function Control() {
                     alignItems: "center",
                   }}
                 >
-                  <Onbtn>ON</Onbtn>
-                  <Offbtn>OFF</Offbtn>
+                  <Onbtn onClick={Click(1)}>ON</Onbtn>
+                  <Offbtn onClick={Click(2)}>OFF</Offbtn>
                 </Iotonoffldiv>
               </Iotcontroldiv>
               <Tuttlediv>

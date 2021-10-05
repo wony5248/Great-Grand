@@ -26,7 +26,7 @@ class HumanDetectorToServer(Node):
     def __init__(self):
         print("init started")
         super().__init__('camera_client')
-
+    
         self.subscription = self.create_subscription(
             CompressedImage,
             '/image_jpeg/compressed',

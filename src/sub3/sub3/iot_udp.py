@@ -3,14 +3,13 @@ from rclpy.node import Node
 import time
 import os
 import socket
+import socketio
 import threading
 import struct
 import binascii
-
 # iot_udp 노드는 udp 통신을 이용해 iot로 부터 uid를 얻어 접속, 제어를 하는 노드입니다.
 # sub1,2 에서는 ros 메시지를 이용해 쉽게 제어했지만, advanced iot 제어에서는 정의된 통신프로토콜을 보고 iot와 직접 데이터를 주고 받는 형식으로 제어하게 됩니다.
 # 통신 프로토콜은 명세서를 참조해주세요.
-
 
 # 노드 로직 순서
 # 1. 통신 소켓 생성
@@ -21,7 +20,20 @@ import binascii
 # 6. iot scan 
 # 7. iot connect
 # 8. iot control
+menu = 0
+sio = socketio.Client()
+@sio.event
+def connect():
+    print('connection established')
 
+@sio.event
+def disconnect():
+    print('disconnected from server')
+@sio.event
+def IoTmsg(data):
+    global menu
+    menu = data
+    print(data)
 # 통신프로토콜에 필요한 데이터입니다. 명세서에 제어, 상태 프로토콜을 참조하세요. 
 params_status = {
     (0xa, 0x25): "IDLE",
@@ -48,14 +60,13 @@ params_control_cmd = {
 
 
 class iot_udp(Node):
-
     def __init__(self):
         super().__init__('iot_udp')
-
+        global menu
         self.ip = '127.0.0.1'
         self.port = 7502
         self.send_port = 7401
-
+        sio.connect('http://127.0.0.1:12001')
         # 로직 1. 통신 소켓 생성
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         recv_address = (self.ip, self.port)
@@ -76,9 +87,7 @@ class iot_udp(Node):
         # os.system('cls')
         while True:
             # 로직 5. 사용자 메뉴 생성
-            print('Select Menu [0: scan, 1: connect, 2:control, 3:disconnect, 4:all_procedures ] ')
             try:
-                menu = int(input())
                 if menu == 0:
                 # scan
                     self.scan()
@@ -88,6 +97,7 @@ class iot_udp(Node):
                 elif menu == 2:
                 # control
                     self.control()
+                    menu = 0
                 elif menu == 3:
                 # disconnect
                     self.disconnect()
@@ -168,15 +178,15 @@ class iot_udp(Node):
 
     def scan(self):
         # 로직 6. iot scan
-        print('SCANNING NOW.....')
 
         if self.is_recv_data:
             # for uid, info in self.recv_data.items():
             #     print(f'uid: {uid}, network status: {info[0]}, device status: {info[1]}')
 
             # print(f'uid: {self.recv_data[0]}, network status: {self.recv_data[1]}, device status: {self.recv_data[2]}')
-            print(f'uid: {self.recv_data[0]}, network status: {params_status[self.recv_data[1]]}, '
-                  f'device status: {params_status[self.recv_data[2]]}')
+            # print(f'uid: {self.recv_data[0]}, network status: {params_status[self.recv_data[1]]}, '
+            #       f'device status: {params_status[self.recv_data[2]]}')
+            pass
 
     def connect(self):
         # 로직 7. iot connect
