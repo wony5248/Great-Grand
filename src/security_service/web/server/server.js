@@ -75,7 +75,7 @@ io.on('connection', socket => {
         console.log('disconnected from server');
     });
     socket.on('IoT', (msg) => {
-        console.log(msg);
+        console.log(msg)
         io.emit("IoTmsg", msg);
     });
     socket.on('connect', () => {
