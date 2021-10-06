@@ -22,6 +22,22 @@ import numpy as np
 # 6. 전방 주시 포인트와 로봇 헤딩과의 각도 계산
 # 7. 선속도, 각속도 정하기
 
+sio = socketio.Client()
+
+@sio.event
+def connect():
+    print('connection established')
+
+@sio.event
+def patrol(data):
+    if data == 1 :
+        return True
+    else :
+        return False
+
+@sio.event
+def disconnect():
+    print('disconnected from server')
 
 class followTheCarrot(Node):
 
@@ -50,10 +66,11 @@ class followTheCarrot(Node):
         self.min_lfd=0.1
         self.max_lfd=1.0
 
+        sio.connect('http://j127.0.0.1:12001')
 
     def timer_callback(self):
 
-        if self.is_status and self.is_odom ==True and self.is_path==True:
+        if sio.patrol() and self.is_status and self.is_odom ==True and self.is_path==True:
 
 
             if len(self.path_msg.poses)> 1:
@@ -170,6 +187,7 @@ def main(args=None):
 
     path_tracker.destroy_node()
     rclpy.shutdown()
+    sio.disconnect()
 
 
 if __name__ == '__main__':
