@@ -81,7 +81,7 @@ class a_star(Node):
 
 
     def grid_cell_to_pose(self,grid_cell):
-
+        
         x = 0
         y = 0
         '''
@@ -108,11 +108,12 @@ class a_star(Node):
         
 
     def goal_callback(self,msg):
-        
+        print(msg)
         if msg.header.frame_id=='map':
             '''
             로직 6. goal_pose 메시지 수신하여 목표 위치 설정
             '''
+            print("in")
             goal_x = msg.pose.position.x
             goal_y = msg.pose.position.y
             goal_cell= self.pose_to_grid_cell(x=goal_x, y=goal_y)
@@ -133,8 +134,11 @@ class a_star(Node):
 
                 # 다익스트라 알고리즘을 완성하고 주석을 해제 시켜주세요. 
                 # 시작지, 목적지가 탐색가능한 영역이고, 시작지와 목적지가 같지 않으면 경로탐색을 합니다.
+                print(start_grid_cell)
+                print(self.goal)
                 if self.grid[start_grid_cell[0]][start_grid_cell[1]] ==0 and self.grid[self.goal[0]][self.goal[1]] ==0  and start_grid_cell != self.goal :
                     self.dijkstra(start_grid_cell)
+                    print("dikstra in")
 
 
                 self.global_path_msg=Path()
@@ -148,6 +152,7 @@ class a_star(Node):
                     self.global_path_msg.poses.append(tmp_pose)
             
                 if len(self.final_path)!=0 :
+                    print("pub!")
                     self.a_star_pub.publish(self.global_path_msg)
 
     def dijkstra(self,start):
