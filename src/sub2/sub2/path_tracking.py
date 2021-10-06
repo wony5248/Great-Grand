@@ -24,6 +24,7 @@ import socketio
 # 7. 선속도, 각속도 정하기
 
 sio = socketio.Client()
+is_patrol = False
 
 @sio.event
 def connect():
@@ -31,11 +32,11 @@ def connect():
 
 @sio.event
 def patrol(data):
-    print(data)
+    global is_patrol
     if data == 1 :
-        return True
+        is_patrol = True
     else :
-        return False
+        is_patrol = False
 
 @sio.event
 def disconnect():
@@ -71,9 +72,17 @@ class followTheCarrot(Node):
         sio.connect('http://127.0.0.1:12001')
 
     def timer_callback(self):
+        global is_patrol
+        print("{}, {}, {}, {}".format(is_patrol, self.is_status, self.is_odom, self.is_path))
 
-        if sio.patrol() and self.is_status and self.is_odom ==True and self.is_path==True:
+        if is_patrol == False :
+            self.cmd_msg.linear.x=0.0
+            self.cmd_msg.angular.z=0.0
+                
+            self.cmd_pub.publish(self.cmd_msg)
 
+        if is_patrol==True and self.is_status==True and self.is_odom ==True and self.is_path==True:
+            
 
             if len(self.path_msg.poses)> 1:
                 self.is_look_forward_point= False
@@ -153,10 +162,7 @@ class followTheCarrot(Node):
                 self.cmd_msg.linear.x=0.0
                 self.cmd_msg.angular.z=0.0
 
-            
-            self.cmd_pub.publish(self.cmd_msg)
-
-            
+            self.cmd_pub.publish(self.cmd_msg)            
 
     def odom_callback(self, msg):
         self.is_odom=True
