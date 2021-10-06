@@ -6,7 +6,7 @@ import rclpy
 from rclpy.node import Node
 
 from sensor_msgs.msg import CompressedImage
-
+from pathlib import Path
 # face
 from os import makedirs
 from os.path import isdir
@@ -28,8 +28,10 @@ class IMGParser(Node):
         super().__init__(node_name='image_convertor')
         print(cv2.__version__)
         self.face_dirs = 'faces/'
-
-        self.face_classifier = cv2.CascadeClassifier('./haarcascade_frontalface_default.xml')
+        source = str(Path.cwd())
+        source += "\haarcascade_frontalface_default.xml"
+        print(source)
+        self.face_classifier = cv2.CascadeClassifier(source)
 
         self.subscription = self.create_subscription(
             CompressedImage,

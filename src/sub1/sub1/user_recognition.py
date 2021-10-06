@@ -4,7 +4,7 @@ import numpy as np
 import cv2
 import rclpy
 from rclpy.node import Node
-
+from pathlib import Path
 from sensor_msgs.msg import CompressedImage
 
 from os import listdir
@@ -19,13 +19,14 @@ from os.path import isdir, isfile, join
 # 4. 이미지 resizing
 # 5. 이미지 imshow
 # 여러 사용자 학습
-f_dir = 'C:\Ddrive/2021\ssafy2\Iot\git\S05P21A103\install\sub1\Lib\site-packages\sub1/'
-face_classifier = cv2.CascadeClassifier(f_dir + 'haarcascade_frontalface_default.xml')
+source = str(Path.cwd())
+print(source)
+face_classifier = cv2.CascadeClassifier(source + "\haarcascade_frontalface_default.xml")
 
 
 # 사용자 얼굴 학습
 def train(name):
-    data_path = f_dir + 'faces/' + name + '/'
+    data_path = source + '\\faces/' + name + '/'
     # 파일만 리스트로 만듬
     face_pics = [f for f in listdir(data_path) if isfile(join(data_path, f))]
 
@@ -54,7 +55,7 @@ def train(name):
 
 def trains():
     # faces 폴더의 하위 폴더를 학습
-    data_path = f_dir + 'faces/'
+    data_path = source + '\\faces/'
     # 폴더만 색출
     model_dirs = [f for f in listdir(data_path) if isdir(join(data_path, f))]
 
