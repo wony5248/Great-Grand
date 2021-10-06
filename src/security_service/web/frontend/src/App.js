@@ -10,7 +10,6 @@ import Terms from "./pages/Terms";
 import moment from "moment";
 import { useState } from "react";
 
-import './App.css';
 import Control from "./pages/Control";
 
 function App() {
