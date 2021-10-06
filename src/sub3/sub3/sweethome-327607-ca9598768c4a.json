@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "sweethome-327607",
+  "private_key_id": "ca9598768c4ade104508e87ded960113c38a789a",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCTgnqnoT06kNWJ\n4x4xBv6CRfRP1zh2JGgVMADkDWG1lS9GTJAx+bAV70u23M/Kt07bnmA2SgI0ylnx\naEB0U+F5UNitdQOgvt48x/pUA6GCNcTdIktX2QedkyCeL0+1VY02w7Pl/h+PPa4P\nfc+PUqDBF1336xt911g4c/ISbiThb+4Oa3WBHnCOmht/6b08mgRs13sQFvA9sRyO\nFLqxn80hATy+WfaPeDaas1ZZ28KLJ7D+AuDOuDRZ8gDl8Hux0G7DxnFSW5ASi3rU\nyf4ybHyZK4aAbukOe/bxFJH8icGmgr9rVI0xpz4Ep5BYwVXTi5xATCymMbNWdvaZ\nkxyoXW8HAgMBAAECggEACjVb9rDmc2ClnpLMupjg0TQ1KbdbzXVMjLbTQPUaH35x\nFJzk18iPYp06cK/MY5uXBgTqZKdviqa8XcQYvdQ2RPaO4EY6V4wOBkfSr7DGoyPE\neYdPjodTCxktBzV//y0qBjG6B/8zwO6EVscer60IugQ7eRZYwzc9gD6p8JOV0tIY\nyT+B0ewHisxVsqFSpZPlqtsNZ498gPRyy7TPlN8qhjCxa/NekRBsdY4VUZd6foaY\nDbynujEARIiCHyjSmUfM6dFPKTX7nCJ1xLRlvUz9zmbf0OV6RaOsuPPHfSyecxnP\nc+N6dTOOM9NOwm+0UiY8i50SHrT7wSG7SxKdL3WQ4QKBgQDMknzhydtYn2F2tGve\nHLoq9W9/BfoYo8rFlSiKUzFMXQKbxQQGNHifTch2havNqRh0aAUeCHXHUUrihY6d\nfQ2+IVdCxibDWgM9G8qYQFnTd+VpvmFcTpeDqABNuBhgEIafhzHSPG9yhfmMG1rR\neThqFyxt1S9X7dXObZr6+Ug+YQKBgQC4l6hNBjT8D6B408mo40ebcugRkP2nSev/\niE/Ed3NOe4I/veJXZaN5Rg6jc9l66H02ajUbFtHhMVx90CwI0LERkdsEwANr8Q54\nMF3U39Qdd15QeSrrUHKOD5Air5+Lig+CixmJ5fL+3YEjm9UpAdFzBdcW2lEKqNz2\nkaEjLPAWZwKBgQCAk6WoKD4UEoCoojeV78pXC9IbLT+G0xO0Yc6MOkOm8mKcUxT3\nbW1O+w1+6P8VkS1MpMBqovib4Q1HGJiNhbbohH4a+v4MFHwqoVgRn4iVsCrh7oW1\nBbSXTDV8o7O2VUy34bo/oDqP6YLyO5M2S5FYpN4I3lAWXObgCuW4zotIoQKBgQCn\nT0aLccnKgTt46LVKb55yxiaT7XALFdRjCyEJuR75DrdSoQArKQOPozEXc6S2Y01C\naedygy9+RihIHMwcvVMQ0rvKRWOUjawIwgX6MVnnz07b78c3+/Woz3BcEASzDFLc\nhsmCFLs3yHsJVHBTN8Oo1q1KmFyGJeIJVpvP7yY5lwKBgAVL6NY+cMuLGE7t7Uww\n3qMNNBRkeNFe/D3bL6WAAb+qM4gwH/UkMGsl6bmnuqTdT1vpTmD0oV77EuP7M7wd\ntPMtqhhJcHK2uuwQ3m3aJtr1eNNFgEkq+d77xi1N9GyUYW3r2/JhJbLx5CaHbm+Q\n4M9viIQVe4BpY5tUk+t29xiN\n-----END PRIVATE KEY-----\n",
+  "client_email": "sweethome@sweethome-327607.iam.gserviceaccount.com",
+  "client_id": "107810281454565466864",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/sweethome%40sweethome-327607.iam.gserviceaccount.com"
+}
