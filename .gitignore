@@ -8,6 +8,7 @@ build/
 src/security_service/web/node_modules/
 src/security_service/web/backend/node_modules/
 src/security_service/web/frontend/node_modules/
+src/sub1/sub1/faces
 # Ignore generated docs
 *.dox
 *.wikidoc
