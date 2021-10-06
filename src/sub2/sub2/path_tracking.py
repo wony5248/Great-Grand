@@ -7,6 +7,7 @@ from squaternion import Quaternion
 from nav_msgs.msg import Odometry,Path
 from math import pi,cos,sin,sqrt,atan2
 import numpy as np
+import socketio
 
 # path_tracking 노드는 로봇의 위치(/odom), 로봇의 속도(/turtlebot_status), 주행 경로(/local_path)를 받아서, 주어진 경로를 따라가게 하는 제어 입력값(/cmd_vel)을 계산합니다.
 # 제어입력값은 선속도와 각속도로 두가지를 구합니다. 
@@ -30,6 +31,7 @@ def connect():
 
 @sio.event
 def patrol(data):
+    print(data)
     if data == 1 :
         return True
     else :
@@ -66,7 +68,7 @@ class followTheCarrot(Node):
         self.min_lfd=0.1
         self.max_lfd=1.0
 
-        sio.connect('http://j127.0.0.1:12001')
+        sio.connect('http://127.0.0.1:12001')
 
     def timer_callback(self):
 
