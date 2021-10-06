@@ -10,12 +10,12 @@ const cors = require("cors");
 const { response } = require("express");
 const axios = require('axios');
 const fs = require("fs");
-const { Server } = require("https");
+const { Server } = require("http");
 require('dotenv').config();
 
 //----------------------------------
 // websocket
-const server = require('https').createServer(app);
+const server = require('http').createServer(app);
 const io = require('socket.io')(server, {
   cors: {
       origin: ["http://127.0.0.1:3000", "http://localhost:3000", "http://localhost:12001", "https://j5a103.p.ssafy.io/Control","https://j5a103.p.ssafy.io"],
