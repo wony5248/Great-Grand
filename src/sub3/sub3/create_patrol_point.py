@@ -15,6 +15,7 @@ def connect():
 @sio.event
 def patrol(data):
     global is_patrol
+    print(data)
     if data == 1 :
         is_patrol = True
     else :

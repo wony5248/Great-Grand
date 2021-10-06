@@ -82,9 +82,9 @@ class IMGParser(Node):
 
         # 네이버 SENS를 위한 변수
         self.sms_url = "https://sens.apigw.ntruss.com"
-        self.sms_access_key = "이부분은 따로 카카오톡에 따로 올려놓았습니다."
-        self.sms_secret_key = "이부분은 따로 카카오톡에 따로 올려놓았습니다."
-        self.sms_uri = "이부분은 따로 카카오톡에 따로 올려놓았습니다."
+        # self.sms_access_key = "tHkFeupZEEF6JagMskrs"
+        # self.sms_secret_key = "ZmFH2w4PhQ5UKknzCRgTtWXdei5X6XIIdS7BLBQp"
+        # self.sms_uri = "/sms/v2/services/ncp:sms:kr:272805539294:great_grand/messages"
         self.sms_type = "SMS"
         self.sms_from_countryCode = "82"
         self.sms_from_number = "01091401340"
