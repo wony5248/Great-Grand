@@ -103,6 +103,17 @@ const Click = (con) => {
   });
   socket.emit("IoT", con);
 };
+const Patrol = (con) => {
+  console.log(con)
+  const socket = io(address, {
+    withCredentials: true,
+    transports: ["websocket", "polling"],
+    extraHeaders: {
+      "my-custom-header": "abcd",
+    },
+  });
+  socket.emit("pat", con);
+};
 
 function Control() {
   const [image, setImage] = useState("");
@@ -203,8 +214,8 @@ function Control() {
                     alignItems: "center",
                   }}
                 >
-                  <Onbtn style={{height:"60px"}} onClick={() => Click(2)}>ON</Onbtn>
-                  <Offbtn style={{height:"60px"}} onClick={() => Click(2)}>OFF</Offbtn>
+                  <Onbtn style={{height:"60px"}} onClick={() => Patrol(1)}>ON</Onbtn>
+                  <Offbtn style={{height:"60px"}} onClick={() => Patrol(0)}>OFF</Offbtn>
                 </Iotonoffldiv>
               </Iotcontroldiv>
               <Iotcontroldiv style={{display:"flex", flexDirection:"column", alignItems:"center"}}>
@@ -361,8 +372,8 @@ function Control() {
                     alignItems: "center",
                   }}
                 >
-                  <Onbtn style={{height:"60px"}} onClick={() => Click(2)}>ON</Onbtn>
-                  <Offbtn style={{height:"60px"}} onClick={() => Click(2)}>OFF</Offbtn>
+                  <Onbtn style={{height:"60px"}} onClick={() => Patrol(1)}>ON</Onbtn>
+                  <Offbtn style={{height:"60px"}} onClick={() => Patrol(0)}>OFF</Offbtn>
                 </Iotonoffldiv>
               </Iotcontroldiv>
               <Iotcontroldiv style={{display:"flex", flexDirection:"column", alignItems:"center"}}>
@@ -522,8 +533,8 @@ function Control() {
                     alignItems: "center",
                   }}
                 >
-                  <Connectbtn onClick={() => Click(1)}>ON</Connectbtn>
-                  <Connectbtn onClick={() => Click(3)}>OFF</Connectbtn>
+                  <Connectbtn onClick={() => Patrol(1)}>ON</Connectbtn>
+                  <Connectbtn onClick={() => Patrol(0)}>OFF</Connectbtn>
                 </Iotonoffldiv>
               </Tuttlediv>
               <Iotcontroldiv style={{display:"flex", flexDirection:"column", alignItems:"center"}}>

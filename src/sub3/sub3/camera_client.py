@@ -81,7 +81,6 @@ class HumanDetectorToServer(Node):
             self.byte_data = cv2.imencode('.jpg', self.img_bgr)[1].tobytes()
 
             sio.emit('streaming', b64data.decode( 'utf-8' ) )
-            time.sleep(0.5)
             cv2.waitKey(1)
 
 def main(args=None):

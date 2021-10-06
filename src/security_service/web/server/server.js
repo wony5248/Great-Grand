@@ -78,6 +78,10 @@ io.on('connection', socket => {
         console.log(msg)
         io.emit("IoTmsg", msg);
     });
+    socket.on('pat', (msg) => {
+        console.log(msg)
+        io.emit("patrol", msg);
+    });
     socket.on('connect', () => {
         console.log('connected from server');
     });
