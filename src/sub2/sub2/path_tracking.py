@@ -7,6 +7,7 @@ from squaternion import Quaternion
 from nav_msgs.msg import Odometry,Path
 from math import pi,cos,sin,sqrt,atan2
 import numpy as np
+import socketio
 
 # path_tracking 노드는 로봇의 위치(/odom), 로봇의 속도(/turtlebot_status), 주행 경로(/local_path)를 받아서, 주어진 경로를 따라가게 하는 제어 입력값(/cmd_vel)을 계산합니다.
 # 제어입력값은 선속도와 각속도로 두가지를 구합니다. 
@@ -22,6 +23,24 @@ import numpy as np
 # 6. 전방 주시 포인트와 로봇 헤딩과의 각도 계산
 # 7. 선속도, 각속도 정하기
 
+sio = socketio.Client()
+is_patrol = False
+
+@sio.event
+def connect():
+    print('connection established')
+
+@sio.event
+def patrol(data):
+    global is_patrol
+    if data == 1 :
+        is_patrol = True
+    else :
+        is_patrol = False
+
+@sio.event
+def disconnect():
+    print('disconnected from server')
 
 class followTheCarrot(Node):
 
@@ -50,11 +69,20 @@ class followTheCarrot(Node):
         self.min_lfd=0.1
         self.max_lfd=1.0
 
+        sio.connect('http://127.0.0.1:12001')
 
     def timer_callback(self):
+        global is_patrol
+        print("{}, {}, {}, {}".format(is_patrol, self.is_status, self.is_odom, self.is_path))
 
-        if self.is_status and self.is_odom ==True and self.is_path==True:
+        if is_patrol == False :
+            self.cmd_msg.linear.x=0.0
+            self.cmd_msg.angular.z=0.0
+                
+            self.cmd_pub.publish(self.cmd_msg)
 
+        if is_patrol==True and self.is_status==True and self.is_odom ==True and self.is_path==True:
+            
 
             if len(self.path_msg.poses)> 1:
                 self.is_look_forward_point= False
@@ -134,10 +162,7 @@ class followTheCarrot(Node):
                 self.cmd_msg.linear.x=0.0
                 self.cmd_msg.angular.z=0.0
 
-            
-            self.cmd_pub.publish(self.cmd_msg)
-
-            
+            self.cmd_pub.publish(self.cmd_msg)            
 
     def odom_callback(self, msg):
         self.is_odom=True
@@ -170,6 +195,7 @@ def main(args=None):
 
     path_tracker.destroy_node()
     rclpy.shutdown()
+    sio.disconnect()
 
 
 if __name__ == '__main__':
