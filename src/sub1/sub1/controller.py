@@ -42,7 +42,8 @@ class Controller(Node):
 
         ## 제어 메시지 변수 생성 
         self.cmd_msg=Twist()
-        sio.connect('http://127.0.0.1:12001')
+        # sio.connect('http://127.0.0.1:12001')
+        sio.connect('http://j5a103.p.ssafy.io:3002')
         self.app_control_msg=Int8MultiArray()
         for i in range(17):
             self.app_control_msg.data.append(0)

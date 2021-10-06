@@ -90,7 +90,8 @@ class HumanDetectorToServer(Node):
         self.pedes_detector = cv2.HOGDescriptor()
         self.pedes_detector.setSVMDetector(cv2.HOGDescriptor_getDefaultPeopleDetector())
         
-        sio.connect('http://127.0.0.1:12001')
+        # sio.connect('http://127.0.0.1:12001')
+        sio.connect('http://j5a103.p.ssafy.io:3002')
 
         cv2.imwrite(self.dir_img, np.zeros((240, 320, 3)).astype(np.uint8))
 
