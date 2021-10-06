@@ -88,8 +88,8 @@ class IMGParser(Node):
             pass
 
         # 얼굴 사진 100장을 다 얻었거나 enter키 누르면 종료
-        # if cv2.waitKey(1) == 13 or count == 100:
-        #     break
+        if cv2.waitKey(1) == 13 or self.count == 100:
+            exit()
         cv2.waitKey(1)
         # cap.release()
         # cv2.destroyAllWindows()
