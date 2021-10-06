@@ -11,8 +11,11 @@ import styled1 from "styled-components";
 import { Grid, Paper } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useMediaQuery } from "react-responsive";
-import Streamimg from "../assets/cam.jpg";
+import { useEffect, useState } from "react";
+// import Streamimg from "../assets/cam.jpg";
 import { display } from "@mui/system";
+import { io } from "socket.io-client";
+const address = "http://127.0.0.1:12001";
 // import socketio from "socke"
 const Streamingdiv = styled1.div`
     width: 100%;
@@ -42,6 +45,7 @@ const Onbtn = styled1.button`
     width: 160px;
     height: 80px;
     border:none;
+    cursor: pointer;
     color: white;
 `;
 const Offbtn = styled1.button`
@@ -49,6 +53,7 @@ const Offbtn = styled1.button`
     width: 160px;
     height: 80px;
     border: none;
+    cursor: pointer;
     color: white;
 `;
 const Controlbtn = styled1.button`
@@ -56,6 +61,15 @@ const Controlbtn = styled1.button`
     width: 90px;
     height: 90px;
     border:none;
+    cursor: pointer;
+    color: white;
+`;
+const Connectbtn = styled1.button`
+    background-color: #9AC0E3;
+    width: 160px;
+    height: 80px;
+    border:none;
+    cursor: pointer;
     color: white;
 `;
 const Registbtn = styled1.button`
@@ -63,6 +77,7 @@ const Registbtn = styled1.button`
     width: 160px;
     height: 80px;
     border:none;
+    cursor: pointer;
     color: white;
 `;
 const Desktop = ({ children }) => {
@@ -77,8 +92,55 @@ const Mobile = ({ children }) => {
   const isMobile = useMediaQuery({ maxWidth: 612 });
   return isMobile ? children : null;
 };
+const Click = (con) => {
+  console.log(con)
+  const socket = io(address, {
+    withCredentials: true,
+    transports: ["websocket", "polling"],
+    extraHeaders: {
+      "my-custom-header": "abcd",
+    },
+  });
+  socket.emit("IoT", con);
+};
+const Patrol = (con) => {
+  console.log(con)
+  const socket = io(address, {
+    withCredentials: true,
+    transports: ["websocket", "polling"],
+    extraHeaders: {
+      "my-custom-header": "abcd",
+    },
+  });
+  socket.emit("pat", con);
+};
 
 function Control() {
+  const [image, setImage] = useState("");
+  const [list, setList] = useState([]);
+  useEffect(() => {
+    const socket = io(address, {
+      withCredentials: true,
+      transports: ["polling"],
+      extraHeaders: {
+        "my-custom-header": "abcd",
+      },
+    });
+    socket.on("connect", () => {
+      console.log(socket.id);
+    });
+    socket.on("jpgstream", (msg) => {
+      setImage(msg);
+    });
+
+    socket.on("disconnect", () => {
+      console.log("disconnected");
+    });
+    console.log(socket.connected);
+    socket.on("sensormsg", (message) => {
+      setList(message)
+    });
+  }, []);
   return (
     <React.Fragment>
       <AppAppBar />
@@ -93,10 +155,14 @@ function Control() {
         >
           <Desktop>
             <Streamingdiv style={{ height: "450px", maxWidth: "900px" }}>
-              <img src={Streamimg} height="100%" width="100%"></img>
+              <img
+                src={`data:image/jpg;base64,${image}`}
+                height="100%"
+                width="100%"
+              ></img>
             </Streamingdiv>
-            <Rescontroldiv style={{ maxWidth: "900px", display:"flex"}}>
-              <Iotcontroldiv>
+            <Rescontroldiv style={{ maxWidth: "900px", display: "flex", justifyContent:"space-between" }}>
+              <Iotcontroldiv style={{display:"flex", flexDirection:"column", alignItems:"center"}}>
                 {" "}
                 <Typography
                   style={{
@@ -109,19 +175,24 @@ function Control() {
                 >
                   IOT ON/OFF
                 </Typography>
-                <Iotonoffldiv style={{
+                <Iotonoffldiv
+                  style={{
                     display: "flex",
-                    width:"60%",
-                    height:"300px",
-                    flexDirection:"column",
+                    width: "60%",
+                    height: "300px",
+                    flexDirection: "column",
                     justifyContent: "space-evenly",
                     alignItems: "center",
-                  }}>
-                  <Onbtn>ON</Onbtn>
-                  <Offbtn>OFF</Offbtn>
+                  }}
+                >
+                  <Connectbtn style={{height:"60px"}} onClick={() => Click(1)}>CONNECT</Connectbtn>
+                  <Connectbtn style={{height:"60px"}} onClick={() => Click(3)}>DISCONNECT</Connectbtn>
+                  <Onbtn style={{height:"60px"}} onClick={() => Click(2)}>ON</Onbtn>
+                  <Offbtn style={{height:"60px"}} onClick={() => Click(2)}>OFF</Offbtn>
                 </Iotonoffldiv>
               </Iotcontroldiv>
-              <Tuttlediv>
+              <Iotcontroldiv style={{display:"flex", flexDirection:"column", alignItems:"center"}}>
+                {" "}
                 <Typography
                   style={{
                     marginBottom: "12px",
@@ -131,42 +202,125 @@ function Control() {
                     color: "#9AC0E3",
                   }}
                 >
-                  TUTTLE CONTROL
+                  Patrol ON/OFF
                 </Typography>
-                <Tuttlecontroldiv>
-                  <div style={{ display: "flex", justifyContent: "center" }}>
-                    <Controlbtn style={{ marginTop: "15px" }}>GO</Controlbtn>
-                  </div>
-                  <div
-                    style={{ display: "flex", justifyContent: "space-around" }}
-                  >
-                    <Controlbtn>LEFT</Controlbtn>
-                    <Controlbtn>RIGHT</Controlbtn>
-                  </div>
-                  <div style={{ display: "flex", justifyContent: "center" }}>
-                    <Controlbtn>BACK</Controlbtn>
-                  </div>
-                </Tuttlecontroldiv>
-              </Tuttlediv>
+                <Iotonoffldiv
+                  style={{
+                    display: "flex",
+                    width: "60%",
+                    height: "300px",
+                    flexDirection: "column",
+                    justifyContent: "space-evenly",
+                    alignItems: "center",
+                  }}
+                >
+                  <Onbtn style={{height:"60px"}} onClick={() => Patrol(1)}>ON</Onbtn>
+                  <Offbtn style={{height:"60px"}} onClick={() => Patrol(0)}>OFF</Offbtn>
+                </Iotonoffldiv>
+              </Iotcontroldiv>
+              <Iotcontroldiv style={{display:"flex", flexDirection:"column", alignItems:"center"}}>
+                {" "}
+                <Typography
+                  style={{
+                    marginBottom: "12px",
+                    marginTop: "12px",
+                    fontWeight: "bold",
+                    fontSize: "24px",
+                    color: "#9AC0E3",
+                  }}
+                >
+                  INFORMATION
+                </Typography>
+                <Iotonoffldiv
+                  style={{
+                    display: "flex",
+                    width: "60%",
+                    height: "300px",
+                    flexDirection: "column",
+                    justifyContent: "space-evenly",
+                    alignItems: "center",
+                  }}
+                >
+                  <Typography
+                  style={{
+                    marginBottom: "12px",
+                    marginTop: "12px",
+                    fontWeight: "bold",
+                    fontSize: "24px",
+                    color: "#9AC0E3",
+                    width:"100%",
+                    display:"flex",
+                    justifyContent:"flex-start"
+                  }}
+                >
+                  <span style={{display:"flex", justifyContent:"center",width:"30%"}}>📅</span>{`${list[0]}월 ${list[1]}일`}
+                </Typography>
+                <Typography
+                  style={{
+                    marginBottom: "12px",
+                    marginTop: "12px",
+                    fontWeight: "bold",
+                    fontSize: "24px",
+                    width:"100%",
+                    color: "#9AC0E3",
+                    display:"flex",
+                    justifyContent:"flex-start"
+                  }}
+                >
+                  <span style={{display:"flex", justifyContent:"center",width:"30%"}}>🕑</span>{`${list[2]}시 ${list[3]}분`}
+                </Typography>
+                <Typography
+                  style={{
+                    marginBottom: "12px",
+                    marginTop: "12px",
+                    fontWeight: "bold",
+                    fontSize: "24px",
+                    color: "#9AC0E3",
+                    width:"100%",
+                    display:"flex",
+                    justifyContent:"flex-start"
+                  }}
+                >
+                  <span style={{display:"flex", justifyContent:"center",width:"30%"}}>🌡️</span>{`${list[4]}℃`}
+                </Typography>
+                <Typography
+                  style={{
+                    marginBottom: "12px",
+                    marginTop: "12px",
+                    fontWeight: "bold",
+                    fontSize: "24px",
+                    width:"100%",
+                    color: "#9AC0E3",
+                    display:"flex",
+                    justifyContent:"flex-start"
+                  }}
+                >
+                  <span style={{display:"flex", justifyContent:"center",width:"30%"}}>🛰️</span>{`${list[5]}`}
+                </Typography>
+                </Iotonoffldiv>
+              </Iotcontroldiv>
             </Rescontroldiv>
             <div
               style={{
                 width: "100%",
-                maxWidth:"900px",
+                maxWidth: "900px",
                 marginTop: "30px",
                 display: "flex",
                 justifyContent: "flex-end",
               }}
             >
-              <Registbtn>IOT 등록</Registbtn>
             </div>
           </Desktop>
           <Tablet>
             <Streamingdiv style={{ maxWidth: "700px" }}>
-              <img src={Streamimg} height="100%" width="100%"></img>
+              <img
+                src={`data:image/jpg;base64,${image}`}
+                height="100%"
+                width="100%"
+              ></img>
             </Streamingdiv>
-            <Rescontroldiv style={{ maxWidth: "700px", display:"flex"}}>
-              <Iotcontroldiv>
+            <Rescontroldiv style={{ maxWidth: "700px", display: "flex",  justifyContent:"space-between" }}>
+              <Iotcontroldiv style={{display:"flex", flexDirection:"column", alignItems:"center"}}>
                 {" "}
                 <Typography
                   style={{
@@ -179,19 +333,24 @@ function Control() {
                 >
                   IOT ON/OFF
                 </Typography>
-                <Iotonoffldiv style={{
+                <Iotonoffldiv
+                  style={{
                     display: "flex",
-                    width:"60%",
-                    height:"300px",
-                    flexDirection:"column",
+                    width: "80%",
+                    height: "300px",
+                    flexDirection: "column",
                     justifyContent: "space-evenly",
                     alignItems: "center",
-                  }}>
-                  <Onbtn>ON</Onbtn>
-                  <Offbtn>OFF</Offbtn>
+                  }}
+                >
+                  <Connectbtn style={{height:"60px"}} onClick={() => Click(1)}>CONNECT</Connectbtn>
+                  <Connectbtn style={{height:"60px"}} onClick={() => Click(3)}>DISCONNECT</Connectbtn>
+                  <Onbtn style={{height:"60px"}} onClick={() => Click(2)}>ON</Onbtn>
+                  <Offbtn style={{height:"60px"}} onClick={() => Click(2)}>OFF</Offbtn>
                 </Iotonoffldiv>
               </Iotcontroldiv>
-              <Tuttlediv>
+              <Iotcontroldiv style={{display:"flex", flexDirection:"column", alignItems:"center"}}>
+                {" "}
                 <Typography
                   style={{
                     marginBottom: "12px",
@@ -201,39 +360,123 @@ function Control() {
                     color: "#9AC0E3",
                   }}
                 >
-                  TUTTLE CONTROL
+                  Patrol ON/OFF
                 </Typography>
-                <Tuttlecontroldiv>
-                  <div style={{ display: "flex", justifyContent: "center" }}>
-                    <Controlbtn style={{ marginTop: "15px" }}>GO</Controlbtn>
-                  </div>
-                  <div
-                    style={{ display: "flex", justifyContent: "space-around" }}
-                  >
-                    <Controlbtn>LEFT</Controlbtn>
-                    <Controlbtn>RIGHT</Controlbtn>
-                  </div>
-                  <div style={{ display: "flex", justifyContent: "center" }}>
-                    <Controlbtn>BACK</Controlbtn>
-                  </div>
-                </Tuttlecontroldiv>
-              </Tuttlediv>
+                <Iotonoffldiv
+                  style={{
+                    display: "flex",
+                    width: "80%",
+                    height: "300px",
+                    flexDirection: "column",
+                    justifyContent: "space-evenly",
+                    alignItems: "center",
+                  }}
+                >
+                  <Onbtn style={{height:"60px"}} onClick={() => Patrol(1)}>ON</Onbtn>
+                  <Offbtn style={{height:"60px"}} onClick={() => Patrol(0)}>OFF</Offbtn>
+                </Iotonoffldiv>
+              </Iotcontroldiv>
+              <Iotcontroldiv style={{display:"flex", flexDirection:"column", alignItems:"center"}}>
+                {" "}
+                <Typography
+                  style={{
+                    marginBottom: "12px",
+                    marginTop: "12px",
+                    fontWeight: "bold",
+                    fontSize: "24px",
+                    color: "#9AC0E3",
+                  }}
+                >
+                  INFORMATION
+                </Typography>
+                <Iotonoffldiv
+                  style={{
+                    display: "flex",
+                    width: "80%",
+                    height: "300px",
+                    flexDirection: "column",
+                    justifyContent: "space-evenly",
+                    alignItems: "center",
+                  }}
+                >
+                  <Typography
+                  style={{
+                    marginBottom: "12px",
+                    marginTop: "12px",
+                    fontWeight: "bold",
+                    fontSize: "24px",
+                    color: "#9AC0E3",
+                    width:"100%",
+                    display:"flex",
+                    justifyContent:"flex-start"
+                  }}
+                >
+                  <span style={{display:"flex", justifyContent:"center",width:"30%"}}>📅</span>{`${list[0]}월 ${list[1]}일`}
+                </Typography>
+                <Typography
+                  style={{
+                    marginBottom: "12px",
+                    marginTop: "12px",
+                    fontWeight: "bold",
+                    fontSize: "24px",
+                    width:"100%",
+                    color: "#9AC0E3",
+                    display:"flex",
+                    justifyContent:"flex-start"
+                  }}
+                >
+                  <span style={{display:"flex", justifyContent:"center",width:"30%"}}>🕑</span>{`${list[2]}시 ${list[3]}분`}
+                </Typography>
+                <Typography
+                  style={{
+                    marginBottom: "12px",
+                    marginTop: "12px",
+                    fontWeight: "bold",
+                    fontSize: "24px",
+                    color: "#9AC0E3",
+                    width:"100%",
+                    display:"flex",
+                    justifyContent:"flex-start"
+                  }}
+                >
+                  <span style={{display:"flex", justifyContent:"center",width:"30%"}}>🌡️</span>{`${list[4]}℃`}
+                </Typography>
+                <Typography
+                  style={{
+                    marginBottom: "12px",
+                    marginTop: "12px",
+                    fontWeight: "bold",
+                    fontSize: "24px",
+                    width:"100%",
+                    color: "#9AC0E3",
+                    display:"flex",
+                    justifyContent:"flex-start"
+                  }}
+                >
+                  <span style={{display:"flex", justifyContent:"center",width:"30%"}}>🛰️</span>{`${list[5]}`}
+                </Typography>
+                </Iotonoffldiv>
+              </Iotcontroldiv>
+              
             </Rescontroldiv>
             <div
               style={{
                 width: "100%",
-                maxWidth:"700px",
+                maxWidth: "700px",
                 marginTop: "30px",
                 display: "flex",
                 justifyContent: "flex-end",
               }}
             >
-              <Registbtn>IOT 등록</Registbtn>
             </div>
           </Tablet>
           <Mobile>
             <Streamingdiv style={{ height: "300px" }}>
-              <img src={Streamimg} height="100%" width="100%"></img>
+              <img
+                src={`data:image/jpg;base64,${image}`}
+                height="100%"
+                width="100%"
+              ></img>
             </Streamingdiv>
             <Rescontroldiv>
               <Iotcontroldiv>
@@ -256,8 +499,19 @@ function Control() {
                     alignItems: "center",
                   }}
                 >
-                  <Onbtn>ON</Onbtn>
-                  <Offbtn>OFF</Offbtn>
+                  <Connectbtn onClick={() => Click(1)}>CONNECT</Connectbtn>
+                  <Connectbtn onClick={() => Click(3)}>DISCONNECT</Connectbtn>
+                </Iotonoffldiv>
+                <Iotonoffldiv
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-around",
+                    alignItems: "center",
+                    marginTop:"12px"
+                  }}
+                >
+                  <Onbtn onClick={() => Click(2)}>ON</Onbtn>
+                  <Offbtn onClick={() => Click(2)}>OFF</Offbtn>
                 </Iotonoffldiv>
               </Iotcontroldiv>
               <Tuttlediv>
@@ -270,23 +524,101 @@ function Control() {
                     color: "#9AC0E3",
                   }}
                 >
-                  TUTTLE CONTROL
+                  PATROL ON/OFF
                 </Typography>
-                <Tuttlecontroldiv>
-                  <div style={{ display: "flex", justifyContent: "center" }}>
-                    <Controlbtn style={{ marginTop: "15px" }}>GO</Controlbtn>
-                  </div>
-                  <div
-                    style={{ display: "flex", justifyContent: "space-around" }}
-                  >
-                    <Controlbtn>LEFT</Controlbtn>
-                    <Controlbtn>RIGHT</Controlbtn>
-                  </div>
-                  <div style={{ display: "flex", justifyContent: "center" }}>
-                    <Controlbtn>BACK</Controlbtn>
-                  </div>
-                </Tuttlecontroldiv>
+                <Iotonoffldiv
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-around",
+                    alignItems: "center",
+                  }}
+                >
+                  <Connectbtn onClick={() => Patrol(1)}>ON</Connectbtn>
+                  <Connectbtn onClick={() => Patrol(0)}>OFF</Connectbtn>
+                </Iotonoffldiv>
               </Tuttlediv>
+              <Iotcontroldiv style={{display:"flex", flexDirection:"column", alignItems:"center"}}>
+                {" "}
+                <Typography
+                  style={{
+                    marginBottom: "12px",
+                    marginTop: "12px",
+                    fontWeight: "bold",
+                    fontSize: "24px",
+                    color: "#9AC0E3",
+                    alignSelf:"flex-start"
+                  }}
+                >
+                  INFORMATION
+                </Typography>
+                <Iotonoffldiv
+                  style={{
+                    display: "flex",
+                    width: "80%",
+                    height: "300px",
+                    flexDirection: "column",
+                    justifyContent: "space-evenly",
+                    alignItems: "center",
+                  }}
+                >
+                  <Typography
+                  style={{
+                    marginBottom: "12px",
+                    marginTop: "12px",
+                    fontWeight: "bold",
+                    fontSize: "24px",
+                    color: "#9AC0E3",
+                    width:"100%",
+                    display:"flex",
+                    justifyContent:"flex-start"
+                  }}
+                >
+                  <span style={{display:"flex", justifyContent:"center",width:"30%"}}>📅</span>{`${list[0]}월 ${list[1]}일`}
+                </Typography>
+                <Typography
+                  style={{
+                    marginBottom: "12px",
+                    marginTop: "12px",
+                    fontWeight: "bold",
+                    fontSize: "24px",
+                    width:"100%",
+                    color: "#9AC0E3",
+                    display:"flex",
+                    justifyContent:"flex-start"
+                  }}
+                >
+                  <span style={{display:"flex", justifyContent:"center",width:"30%"}}>🕑</span>{`${list[2]}시 ${list[3]}분`}
+                </Typography>
+                <Typography
+                  style={{
+                    marginBottom: "12px",
+                    marginTop: "12px",
+                    fontWeight: "bold",
+                    fontSize: "24px",
+                    color: "#9AC0E3",
+                    width:"100%",
+                    display:"flex",
+                    justifyContent:"flex-start"
+                  }}
+                >
+                  <span style={{display:"flex", justifyContent:"center",width:"30%"}}>🌡️</span>{`${list[4]}℃`}
+                </Typography>
+                <Typography
+                  style={{
+                    marginBottom: "12px",
+                    marginTop: "12px",
+                    fontWeight: "bold",
+                    fontSize: "24px",
+                    width:"100%",
+                    color: "#9AC0E3",
+                    display:"flex",
+                    justifyContent:"flex-start"
+                  }}
+                >
+                  <span style={{display:"flex", justifyContent:"center",width:"30%"}}>🛰️</span>{`${list[5]}`}
+                </Typography>
+                </Iotonoffldiv>
+              </Iotcontroldiv>
             </Rescontroldiv>
             <div
               style={{
@@ -296,7 +628,6 @@ function Control() {
                 justifyContent: "flex-end",
               }}
             >
-              <Registbtn>IOT 등록</Registbtn>
             </div>
           </Mobile>
         </Box>

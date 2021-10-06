@@ -26,7 +26,7 @@ class HumanDetectorToServer(Node):
     def __init__(self):
         print("init started")
         super().__init__('camera_client')
-
+    
         self.subscription = self.create_subscription(
             CompressedImage,
             '/image_jpeg/compressed',
@@ -81,8 +81,12 @@ class HumanDetectorToServer(Node):
 
             self.byte_data = cv2.imencode('.jpg', self.img_bgr)[1].tobytes()
 
+<<<<<<< HEAD
             #sio.emit('streaming', b64data.decode( 'utf-8' ) )
             sio.emit('streaming', b64data)
+=======
+            sio.emit('streaming', b64data.decode( 'utf-8' ) )
+>>>>>>> feature/web
             cv2.waitKey(1)
 
 def main(args=None):

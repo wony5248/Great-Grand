@@ -101,10 +101,7 @@ const Menu = ({ open }) => {
         <span role="img" aria-label="control">🕹️</span>
         Control
         </a>
-      <a href="/Patrol">
-        <span role="img" aria-label="patrol">🚨</span>
-        Patrol
-        </a>
+
     </StyledMenu>
   )
 }

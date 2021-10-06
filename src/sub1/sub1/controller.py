@@ -1,6 +1,6 @@
 import rclpy
 from rclpy.node import Node
-
+import socketio
 from geometry_msgs.msg import Twist
 from ssafy_msgs.msg import TurtlebotStatus,EnviromentStatus
 from std_msgs.msg import Float32,Int8MultiArray
@@ -18,7 +18,14 @@ from std_msgs.msg import Float32,Int8MultiArray
 # 5. 터틀봇 시계방향 회전
 # 6. 터틀봇 반시계방향 회전
 
+sio = socketio.Client()
+@sio.event
+def connect():
+    print('connection established')
 
+@sio.event
+def disconnect():
+    print('disconnected from server')
 class Controller(Node):
 
     def __init__(self):
@@ -35,7 +42,7 @@ class Controller(Node):
 
         ## 제어 메시지 변수 생성 
         self.cmd_msg=Twist()
-        
+        sio.connect('http://127.0.0.1:12001')
         self.app_control_msg=Int8MultiArray()
         for i in range(17):
             self.app_control_msg.data.append(0)
@@ -143,6 +150,8 @@ class Controller(Node):
 
             # 환경 정보 데이터가 있으면 환경정보 데이터 출력
             if self.is_envir_status :
+                lst = [self.envir_status_msg.month, self.envir_status_msg.day, self.envir_status_msg.hour, self.envir_status_msg.minute,self.envir_status_msg.temperature,self.envir_status_msg.weather]
+                sio.emit('sensor', lst)
                 print('{0}.{1}-{2}:{3}, temperature : {4}\'C, {5}'.format(
                     self.envir_status_msg.month,
                     self.envir_status_msg.day,
@@ -164,7 +173,7 @@ class Controller(Node):
 
 
         ## 터틀봇 제어 함수
-        # self.turtlebot_go()
+        self.turtlebot_go()
         # self.turtlebot_stop()
         self.turtlebot_cw_rot()
         # self.turtlebot_cww_rot()
@@ -178,6 +187,7 @@ def main(args=None):
     rclpy.spin(sub1_controller)
     sub1_controller.destroy_node()
     rclpy.shutdown()
+    sio.disconnect()
 
 
 if __name__ == '__main__':

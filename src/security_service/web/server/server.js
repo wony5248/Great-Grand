@@ -16,7 +16,15 @@ app.use(express.static(publicPath));
 
 // 로직 1. WebSocket 서버, WebClient 통신 규약 정의
 const server = require('http').createServer(app);
-const io = require('socket.io')(server)
+const io = require('socket.io')(server, {
+    cors: {
+        origin: ["http://127.0.0.1:3000", "http://localhost:3000", "http://localhost:12001"],
+        methods: ["GET", "POST"],
+        allowedHeaders: ["my-custom-header"],
+        transports: ["websocket", "polling"],
+        credentials: true
+      }
+})
 
 
 var fs = require('fs'); // required for file serving
@@ -66,12 +74,28 @@ io.on('connection', socket => {
     socket.on('disconnect', () => {
         console.log('disconnected from server');
     });
+    socket.on('IoT', (msg) => {
+        console.log(msg)
+        io.emit("IoTmsg", msg);
+    });
+    socket.on('pat', (msg) => {
+        console.log(msg)
+        io.emit("patrol", msg);
+    });
+    socket.on('connect', () => {
+        console.log('connected from server');
+    });
+    socket.on('sensor', (msg) => {
+        console.log(msg)
+        io.emit("sensormsg", msg);
 
+    });
     // 전달받은 이미지를 jpg 파일로 저장
     socket.on('streaming', (message) => {
         socket.to(roomName).emit('sendStreaming', message);
-        // console.log(message);
+        
         buffer = Buffer.from(message, "base64");
+        io.emit("jpgstream", message)
         fs.writeFileSync(path.join(picPath, "/../frontend/src/assets/cam.jpg"), buffer);
     });
 
