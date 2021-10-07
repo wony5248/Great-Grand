@@ -4,6 +4,7 @@ import socketio
 from geometry_msgs.msg import Twist
 from ssafy_msgs.msg import TurtlebotStatus,EnviromentStatus
 from std_msgs.msg import Float32,Int8MultiArray
+
 # controller는 시뮬레이터로 부터를 데이터를 수신해서 확인(출력)하고, 송신해서 제어가 되는지 확인해보는 통신 테스트를 위한 노드입니다.
 # 메시지를 받아서 어떤 데이터들이 있는지 확인하고, 어떤 메시지를 보내야 가전 또는 터틀봇이 제어가 되는지 확인해보면서 ros2 통신에 익숙해지세요.
 # 수신 데이터 : 터틀봇 상태(/turtlebot_status), 환경정보(/envir_status), 가전정보(/app_status)
@@ -17,7 +18,7 @@ from std_msgs.msg import Float32,Int8MultiArray
 # 5. 터틀봇 시계방향 회전
 # 6. 터틀봇 반시계방향 회전
 
-sio = socketio.Client(engineio_logger=True, logger=True, ssl_verify=False, http_session=http_session,)
+sio = socketio.Client(engineio_logger=True, logger=True, ssl_verify=False)
 @sio.event
 def connect():
     print('connection established')
@@ -42,7 +43,7 @@ class Controller(Node):
         ## 제어 메시지 변수 생성 
         self.cmd_msg=Twist()
         # sio.connect('http://127.0.0.1:12001')
-        sio.connect('https://j5a103.p.ssafy.io/socket')
+        sio.connect('http://j5a103.p.ssafy.io:3001')
         self.app_control_msg=Int8MultiArray()
         for i in range(17):
             self.app_control_msg.data.append(0)

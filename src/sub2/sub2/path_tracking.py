@@ -70,7 +70,7 @@ class followTheCarrot(Node):
         self.max_lfd=1.0
 
         # sio.connect('http://127.0.0.1:12001')
-        sio.connect('https://j5a103.p.ssafy.io/io')
+        sio.connect('http://j5a103.p.ssafy.io:3001')
 
     def timer_callback(self):
         global is_patrol

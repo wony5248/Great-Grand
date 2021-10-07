@@ -88,7 +88,7 @@ class PatrolCtrlFromServer(Node):
         self.timer = self.create_timer(self.timer_period, self.timer_callback)
 
         # sio.connect('http://127.0.0.1:12001')
-        sio.connect('https://j5a103.p.ssafy.io/io')
+        sio.connect('http://j5a103.p.ssafy.io:3001')
 
         self.m_control_interval = 10
         self.m_control_iter = 0
