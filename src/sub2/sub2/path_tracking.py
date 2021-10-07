@@ -24,7 +24,7 @@ import socketio
 # 7. 선속도, 각속도 정하기
 
 sio = socketio.Client()
-is_patrol = False
+is_patrol = True
 
 @sio.event
 def connect():
@@ -69,8 +69,8 @@ class followTheCarrot(Node):
         self.min_lfd=0.1
         self.max_lfd=1.0
 
-        # sio.connect('http://127.0.0.1:12001')
-        sio.connect('http://j5a103.p.ssafy.io:3002')
+        sio.connect('http://127.0.0.1:12001')
+        # sio.connect('http://j5a103.p.ssafy.io:3002')
 
     def timer_callback(self):
         global is_patrol

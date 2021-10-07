@@ -9,13 +9,12 @@ import base64
 import time
 from rclpy.node import Node
 from sensor_msgs.msg import CompressedImage
-
+import asyncio
 sio = socketio.Client()
 
 @sio.event
 def connect():
     print('connection established')
-
 @sio.event
 def disconnect():
     print('disconnected from server')
@@ -50,8 +49,8 @@ class HumanDetectorToServer(Node):
         self.pedes_detector = cv2.HOGDescriptor()
         self.pedes_detector.setSVMDetector(cv2.HOGDescriptor_getDefaultPeopleDetector())
         
-        # sio.connect('http://127.0.0.1:12001')
-        sio.connect('http://j5a103.p.ssafy.io:3002')
+        sio.connect('http://127.0.0.1:12001')
+        # sio.connect('http://j5a103.p.ssafy.io:3002')
 
         cv2.imwrite(self.dir_img, np.zeros((240, 320, 3)).astype(np.uint8))
 
@@ -67,7 +66,7 @@ class HumanDetectorToServer(Node):
  
 
         
-    def timer_callback(self):
+    async def timer_callback(self):
 
         if self.img_bgr is not None:
 
@@ -82,6 +81,7 @@ class HumanDetectorToServer(Node):
             self.byte_data = cv2.imencode('.jpg', self.img_bgr)[1].tobytes()
 
             sio.emit('streaming', b64data.decode( 'utf-8' ) )
+            sio.sleep(1.0)
             cv2.waitKey(1)
 
 def main(args=None):

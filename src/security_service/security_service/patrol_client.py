@@ -87,8 +87,8 @@ class PatrolCtrlFromServer(Node):
         self.timer_period = 0.05
         self.timer = self.create_timer(self.timer_period, self.timer_callback)
 
-        # sio.connect('http://127.0.0.1:12001')
-        sio.connect('http://j5a103.p.ssafy.io:3002')
+        sio.connect('http://127.0.0.1:12001')
+        # sio.connect('http://j5a103.p.ssafy.io:3002')
 
         self.m_control_interval = 10
         self.m_control_iter = 0
@@ -160,7 +160,7 @@ class PatrolCtrlFromServer(Node):
             # auto patrol mode off
 
             sio.emit('PatrolStatus', 'Off')
-
+            sio.wait()
             if ctrl_cmd == 1:
 
                 # turn left
@@ -202,7 +202,7 @@ class PatrolCtrlFromServer(Node):
             # auto patrol mode on
 
             sio.emit('PatrolStatus', 'On')
-
+            sio.wait()
             if self.is_odom == True and self.is_path==True:
 
                 if not self.check_1_wp: 

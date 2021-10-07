@@ -1,6 +1,5 @@
 import socketio
-
-
+import time
 # client 는 socketio의 기본 API로 구성된 노드입니다. 서버와 연결을 시도해서 서버와 통신을 합니다.
 
 # 각자의 서버 주소에 맞게 connect 함수 안을 바꿔주고, server 스켈레톤코드를 이용해 서비스를 하고 있다면, 연결이 됩니다.
@@ -39,10 +38,8 @@ def disconnect():
 
 
 # 로직 3. 서버 연결
-# sio.connect('http://127.0.0.1:12001/')
-sio.connect('http://j5a103.p.ssafy.io:3002')
+sio.connect('http://127.0.0.1:12001/')
+# sio.connect('http://j5a103.p.ssafy.io:3002')
 
 # 로직 4. 데이터 송신
 sio.emit('sendTime','TEST')
-
-sio.wait()

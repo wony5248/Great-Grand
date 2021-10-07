@@ -90,8 +90,8 @@ class HumanDetectorToServer(Node):
         self.pedes_detector = cv2.HOGDescriptor()
         self.pedes_detector.setSVMDetector(cv2.HOGDescriptor_getDefaultPeopleDetector())
         
-        # sio.connect('http://127.0.0.1:12001')
-        sio.connect('http://j5a103.p.ssafy.io:3002')
+        sio.connect('http://127.0.0.1:12001')
+        # sio.connect('http://j5a103.p.ssafy.io:3002')
 
         cv2.imwrite(self.dir_img, np.zeros((240, 320, 3)).astype(np.uint8))
 
@@ -141,7 +141,7 @@ class HumanDetectorToServer(Node):
                 self.byte_data = cv2.imencode('.jpg', self.img_bgr)[1].tobytes()
 
             sio.emit('streaming', b64data.decode( 'utf-8' ) )
-
+            sio.wait()
             if self.human_detected:
 
                 str_to_web = "house intruder detected"
@@ -151,7 +151,7 @@ class HumanDetectorToServer(Node):
                 str_to_web = "safe"
 
             sio.emit('safety_status', str_to_web)
-
+            sio.wait()
         else:
 
             pass

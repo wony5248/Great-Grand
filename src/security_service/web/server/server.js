@@ -96,7 +96,7 @@ io.on('connection', socket => {
         
         buffer = Buffer.from(message, "base64");
         io.emit("jpgstream", message)
-        fs.writeFileSync(path.join(picPath, "/../frontend/src/assets/cam.jpg"), buffer);
+        // fs.writeFileSync(path.join(picPath, "/../frontend/src/assets/cam.jpg"), buffer);
     });
 
 })

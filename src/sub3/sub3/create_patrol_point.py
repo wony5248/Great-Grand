@@ -6,7 +6,7 @@ from time import sleep
 import socketio
 
 sio = socketio.Client()
-is_patrol = False
+is_patrol = True
 
 @sio.event
 def connect():
@@ -51,8 +51,8 @@ class PatrolPublisher(Node):
         self.is_odom=False
         self.prev_mode = is_patrol
 
-        # sio.connect('http://127.0.0.1:12001')
-        sio.connect('http://j5a103.p.ssafy.io:3002')
+        sio.connect('http://127.0.0.1:12001')
+        # sio.connect('http://j5a103.p.ssafy.io:3002')
 
 
     def pose_to_grid_cell(self,x,y):   
