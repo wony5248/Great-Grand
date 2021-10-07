@@ -1,0 +1,18 @@
+# 1) 사용한 JVM, 웹서버, WAS 제품 등의 종류와 설정값, 버전 기재
+- Node.js(v14.17.6)
+- Nginx(nginx/1.18.0 (Ubuntu))
+
+# 2) 빌드 시 사용되는 환경 변수 등의 주요 내용 상세 기재
+- 없음
+
+# 3) 배포 시 특이사항 기재
+- feature/frontend, feature/backend 브랜치가 Jenkins와 연동되어 있음.
+- 프론트는 EC2의 /home/ubuntu/project/build 디렉토리로 빌드되어 배포되고 있음.
+- 백은 EC2의 /home/ubuntu/project/backend 디렉토리로 배포되고 있음.
+- 프론트는 nginx를 사용해 ssl을 적용해 프론트의 index.html(정적 웹 파일)로 바로 https로 배포.
+- 백은 node.js 웹 서버를 사용해 pm2로 무중단 배포되어 있으며 nginx의 프록시 설정으로 https로 접근.
+
+# 4) 데이터베이스 접속 정보 등 프로젝트에 활용되는 주요 계정 및 프로퍼티가 적용된 파일 목록
+- 데이터베이스는 사용하지 않음.
+- Jenkins 접속 주소: http://j5a103.p.ssafy.io:9090/ 아이디: j5a103 비밀번호: j5a103!
+
