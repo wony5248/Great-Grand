@@ -52,7 +52,7 @@ class PatrolPublisher(Node):
         self.prev_mode = is_patrol
 
         # sio.connect('http://127.0.0.1:12001')
-        sio.connect('http://j5a103.p.ssafy.io:3001')
+        sio.connect('http://j5a103.p.ssafy.io:3002')
 
 
     def pose_to_grid_cell(self,x,y):   

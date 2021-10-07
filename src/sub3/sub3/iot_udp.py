@@ -67,7 +67,7 @@ class iot_udp(Node):
         self.port = 7502
         self.send_port = 7401
         # sio.connect('http://127.0.0.1:12001')
-        sio.connect('http://j5a103.p.ssafy.io:3001')
+        sio.connect('http://j5a103.p.ssafy.io:3002')
         # 로직 1. 통신 소켓 생성
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         recv_address = (self.ip, self.port)
