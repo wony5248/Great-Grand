@@ -1,0 +1,3 @@
+uint8 control_mode
+float32 put_distance
+float32 put_height
