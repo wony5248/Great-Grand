@@ -16,7 +16,7 @@ import { useEffect, useState } from "react";
 import { display } from "@mui/system";
 import { io } from "socket.io-client";
 // const address = "http://127.0.0.1:12001";
-const address = 'https://j5a103.p.ssafy.io/io/'
+const address = 'http://j5a103.p.ssafy.io:3001' 
 // import socketio from "socke"
 const Streamingdiv = styled1.div`
     width: 100%;
