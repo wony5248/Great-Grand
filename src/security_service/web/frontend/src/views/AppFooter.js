@@ -5,13 +5,14 @@ import Link from '@mui/material/Link';
 import Container from '@mui/material/Container';
 import Typography from '../components/Typography';
 import TextField from '../components/TextField';
-
+import GitHubIcon from '@mui/icons-material/GitHub';
+import Icon from '@mui/material/Icon';
 function Copyright() {
   return (
     <React.Fragment>
       {'© '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
+      <Link color="inherit" href="https://lab.ssafy.com/s05-iot-ctrl/S05P21A103">
+        Our Git
       </Link>{' '}
       {new Date().getFullYear()}
     </React.Fragment>
@@ -24,11 +25,9 @@ const iconStyle = {
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
-  backgroundColor: 'warning.main',
+  backgroundColor: 'white',
   mr: 1,
-  '&:hover': {
-    bgcolor: 'warning.dark',
-  },
+  cursor: "pointer"
 };
 
 const LANGUAGES = [
@@ -37,8 +36,8 @@ const LANGUAGES = [
     name: 'English',
   },
   {
-    code: 'fr-FR',
-    name: 'Français',
+    code: 'ko-KR',
+    name: '한국어',
   },
 ];
 
@@ -59,21 +58,8 @@ export default function AppFooter() {
               sx={{ height: 120 }}
             >
               <Grid item sx={{ display: 'flex' }}>
-                <Box component="a" href="https://mui.com/" sx={iconStyle}>
-                  <img
-                    src="/static/themes/onepirate/appFooterFacebook.png"
-                    alt="Facebook"
-                  />
-                </Box>
-                <Box
-                  component="a"
-                  href="https://twitter.com/MaterialUI"
-                  sx={iconStyle}
-                >
-                  <img
-                    src="/static/themes/onepirate/appFooterTwitter.png"
-                    alt="Twitter"
-                  />
+                <Box href="https://lab.ssafy.com/s05-iot-ctrl/S05P21A103.git" sx={iconStyle}>
+                  <Icon><GitHubIcon></GitHubIcon></Icon>
                 </Box>
               </Grid>
               <Grid item>
@@ -83,14 +69,23 @@ export default function AppFooter() {
           </Grid>
           <Grid item xs={6} sm={4} md={2}>
             <Typography variant="h6" marked="left" gutterBottom>
-              Legal
+              Our Team
             </Typography>
             <Box component="ul" sx={{ m: 0, listStyle: 'none', p: 0 }}>
               <Box component="li" sx={{ py: 0.5 }}>
-                <Link href="/premium-themes/onepirate/terms/">Terms</Link>
+                <Link href="https://lab.ssafy.com/s05-iot-ctrl/S05P21A103.git">신은지</Link>
               </Box>
               <Box component="li" sx={{ py: 0.5 }}>
-                <Link href="/premium-themes/onepirate/privacy/">Privacy</Link>
+                <Link href="https://lab.ssafy.com/s05-iot-ctrl/S05P21A103.git">윤익선</Link>
+              </Box>
+              <Box component="li" sx={{ py: 0.5 }}>
+                <Link href="https://lab.ssafy.com/s05-iot-ctrl/S05P21A103.git">이지훈</Link>
+              </Box>
+              <Box component="li" sx={{ py: 0.5 }}>
+                <Link href="https://lab.ssafy.com/s05-iot-ctrl/S05P21A103.git">이희재</Link>
+              </Box>
+              <Box component="li" sx={{ py: 0.5 }}>
+                <Link href="https://lab.ssafy.com/s05-iot-ctrl/S05P21A103.git">장범진</Link>
               </Box>
             </Box>
           </Grid>
@@ -116,13 +111,9 @@ export default function AppFooter() {
           </Grid>
           <Grid item>
             <Typography variant="caption">
-              {'Icons made by '}
-              <Link href="https://www.freepik.com" rel="sponsored" title="Freepik">
-                Freepik
-              </Link>
-              {' from '}
-              <Link href="https://www.flaticon.com" rel="sponsored" title="Flaticon">
-                www.flaticon.com
+              {'This site made by '}
+              <Link href="https://lab.ssafy.com/s05-iot-ctrl/S05P21A103" rel="sponsored" title="GG">
+                Great Grand
               </Link>
               {' is licensed by '}
               <Link
