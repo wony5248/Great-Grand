@@ -66,11 +66,17 @@
 
 #### 터틀봇 제어 화면
 
-![터틀봇제어](./README.assets/터틀봇제어.gif)
+![터틀봇제어Unity](./README.assets/순찰시뮬레이션.gif)
+![터틀봇제어Rviz2](./README.assets/경로.gif)
+
+#### 집안 IoT 기기 제어 화면
+
+![터틀봇제어](./README.assets/IOT제어.gif)
 
 #### 낙상 감지
 
 ![낙상감지](./README.assets/낙상감지.gif)
+![낙상감지문자](./README.assets/낙상감지문자.jpg)
 
 #### 사용자 인식
 
@@ -150,7 +156,7 @@ $ npm start
 
 #### Server
 
->  [배포문서 참고](./exec/1.gitlab_소스_클론_이후_빌드_및_배포.pdf)
+>  [배포문서 참고]()
 
 
 
