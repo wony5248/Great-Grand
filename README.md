@@ -141,7 +141,7 @@
 
 #### backend (Node.js, Socket.io)
 
-"" directory 상에서
+"src/security_service/web/backend" directory 상에서
 ```bash
 $ npm install
 $ npm start
@@ -149,10 +149,43 @@ $ npm start
 
 #### frontend (React)
 
-"" directory 상에서
+"src/security_service/web/frontend" directory 상에서
 ```bash
 $ npm install
 $ npm start
+```
+
+#### Operation (Python)
+## 사용자 등록 & 인식
+"src/sub1/sub1" directory 상에서
+```bash
+$ python user_enroll.py or ros2 run sub1 make_user
+$ python user_recognition.py or ros2 run sub1 user_recog
+```
+## 낙상 감지
+"src/sub1/sub1" directory 상에서
+```bash
+$ python perception.py or ros2 run sub1 perception
+```
+## IoT 제어
+"src/sub3/sub3" directory 상에서
+```bash
+$ python iot_udp.py or ros2 run sub1 iot_udp
+```
+## Patrol 제어
+"src/sub3/sub3" directory 상에서
+```bash
+$ python create_patrol_point.py or ros2 run sub1 patrol
+```
+## Streaming
+"src/sub3/sub3" directory 상에서
+```bash
+$ python camera_client.py or ros2 run sub1 camera_client
+```
+## 웹에 시뮬레이터 정보 받아오기
+"src/sub1/sub1" directory 상에서
+```bash
+$ python controller.py or ros2 run sub1 controller
 ```
 
 #### Server
