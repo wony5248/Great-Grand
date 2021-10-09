@@ -3,6 +3,7 @@
 
 ### ROS2 ###
 install/
+install추가파일/
 log/
 build/
 src/security_service/web/node_modules/
