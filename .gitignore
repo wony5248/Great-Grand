@@ -4,6 +4,7 @@
 ### ROS2 ###
 install/
 install추가파일/
+src/sub1/sub1/FallDownDetection/Models/sppe/
 log/
 build/
 src/security_service/web/node_modules/
